@@ -1,8 +1,8 @@
 # Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ascend/efficax-builder.svg?style=flat-square)](https://packagist.org/packages/ascend/efficax-builder)
-[![Total Downloads](https://img.shields.io/packagist/dt/ascend/efficax-builder.svg?style=flat-square)](https://packagist.org/packages/ascend/efficax-builder)
-![GitHub Actions](https://github.com/ascend/efficax-builder/actions/workflows/main.yml/badge.svg)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/haseebmukhtar286/laravel-form-sdk.svg?style=flat-square)](https://packagist.org/packages/haseebmukhtar286/laravel-form-sdk)
+[![Total Downloads](https://img.shields.io/packagist/dt/haseebmukhtar286/laravel-form-sdk.svg?style=flat-square)](https://packagist.org/packages/haseebmukhtar286/laravel-form-sdk)
+![GitHub Actions](https://github.com/haseebmukhtar286/laravel-form-sdk/actions/workflows/main.yml/badge.svg)
 
 This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
 
@@ -11,7 +11,7 @@ This is where your description should go. Try and limit it to a paragraph or two
 You can install the package via composer:
 
 ```bash
-composer require ascend/efficax-builder
+composer require haseebmukhtar286/laravel-form-sdk
 ```
 
 ## Usage
@@ -36,12 +36,12 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email hassan.aamir@ascend.com.sa instead of using the issue tracker.
+If you discover any security related issues, please email hassan.aamir.3344@gmail.com instead of using the issue tracker.
 
 ## Credits
 
--   [Hassan AAmir](https://github.com/ascend)
--   [All Contributors](../../contributors)
+- [Hassan Aamir](https://github.com/haseebmukhtar286)
+- [All Contributors](../../contributors)
 
 ## License
 
