@@ -10,10 +10,10 @@ use haseebmukhtar286\LaravelFormSdk\Services\SchemaService;
 
 class SchemaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
     public function listingBySecretKey(Request $request)
     {
         return SchemaService::listingBySecretKey($request);
