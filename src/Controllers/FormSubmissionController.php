@@ -9,6 +9,10 @@ use haseebmukhtar286\LaravelFormSdk\Services\FormSubmissionService;
 
 class FormSubmissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index(Request $request)
     {
         return FormSubmissionService::paginate($request);
