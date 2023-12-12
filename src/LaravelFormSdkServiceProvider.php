@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Route;
 use haseebmukhtar286\LaravelFormSdk\Controllers\FormSubmissionController;
-use haseebmukhtar286\LaravelFormSdk\Controllers\FormController;
+use haseebmukhtar286\LaravelFormSdk\Controllers\SchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ExcelGenerateController;
 
 class LaravelFormSdkServiceProvider extends ServiceProvider
@@ -33,21 +33,21 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             });
 
             Route::prefix('form')->group(function () {
-                Route::get('/', [FormController::class, 'listingBySecretKey']);
-                Route::post('create', [FormController::class, 'createForm']);
-                Route::get('show/{id}', [FormController::class, 'showFormById']);
-                Route::post('update', [FormController::class, 'updateFormById']);
-                Route::delete('delete/{id}', [FormController::class, 'deleteFormById']);
+                Route::get('/', [SchemaController::class, 'listingBySecretKey']);
+                Route::post('create', [SchemaController::class, 'createForm']);
+                Route::get('show/{id}', [SchemaController::class, 'showFormById']);
+                Route::post('update', [SchemaController::class, 'updateFormById']);
+                Route::delete('delete/{id}', [SchemaController::class, 'deleteFormById']);
 
-                Route::get('/all-forms', [FormController::class, 'listingBySecretKeyAll']);
-                Route::get('/builder', [FormController::class, 'getBuilder']);
-                Route::post('/fill/{id}', [FormController::class, 'fillForm']);
+                Route::get('/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
+                Route::get('/builder', [SchemaController::class, 'getBuilder']);
+                Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
 
-                Route::put('/submission/update/{id}', [FormController::class, 'updateSubmissionForm']);
-                Route::get('/submissions/{id}', [FormController::class, 'getAllSubmissionForm']);
-                Route::get('/submission/{id}', [FormController::class, 'getSubmissionShow']);
-                Route::delete('/submission/delete/{id}', [FormController::class, 'deleteSubmission']);
-                Route::get('/edit-builder/{id}', [FormController::class, 'getEditBuilderUrl']);
+                Route::put('/submission/update/{id}', [SchemaController::class, 'updateSubmissionForm']);
+                Route::get('/submissions/{id}', [SchemaController::class, 'getAllSubmissionForm']);
+                Route::get('/submission/{id}', [SchemaController::class, 'getSubmissionShow']);
+                Route::delete('/submission/delete/{id}', [SchemaController::class, 'deleteSubmission']);
+                Route::get('/edit-builder/{id}', [SchemaController::class, 'getEditBuilderUrl']);
             });
 
             Route::get('excelgenerate/{id}', [ExcelGenerateController::class, 'excelGenerate']);

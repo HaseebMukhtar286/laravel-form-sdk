@@ -6,72 +6,76 @@ namespace haseebmukhtar286\LaravelFormSdk\Controllers;
 use App\Http\Controllers\Controller;
 use haseebmukhtar286\LaravelFormSdk\Models\Form;
 use Illuminate\Http\Request;
-use haseebmukhtar286\LaravelFormSdk\Services\FormService;
+use haseebmukhtar286\LaravelFormSdk\Services\SchemaService;
 
-class FormController extends Controller
+class SchemaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function listingBySecretKey(Request $request)
     {
-        return FormService::listingBySecretKey($request);
+        return SchemaService::listingBySecretKey($request);
     }
 
     public function createForm(Request $request)
     {
-        return FormService::createForm($request);
+        return SchemaService::createForm($request);
     }
 
     public function showFormById(Request $request)
     {
-        return FormService::showFormById($request);
+        return SchemaService::showFormById($request);
     }
 
     public function updateFormById(Request $request)
     {
-        return FormService::updateFormById($request);
+        return SchemaService::updateFormById($request);
     }
 
     public function deleteFormById($id)
     {
-        return FormService::deleteFormById($id);
+        return SchemaService::deleteFormById($id);
     }
 
     public function listingBySecretKeyAll(Request $request)
     {
-        return FormService::listingBySecretKeyAll($request);
+        return SchemaService::listingBySecretKeyAll($request);
     }
 
     public function getBuilder(Request $request)
     {
-        return FormService::getBuilder($request);
+        return SchemaService::getBuilder($request);
     }
 
     public function fillForm(Request $request)
     {
-        return FormService::fillForm($request);
+        return SchemaService::fillForm($request);
     }
 
     public function updateSubmissionForm(Request $request)
     {
-        return FormService::updateSubmissionForm($request);
+        return SchemaService::updateSubmissionForm($request);
     }
 
     public function getAllSubmissionForm(Request $request)
     {
-        return FormService::getAllSubmissionForm($request);
+        return SchemaService::getAllSubmissionForm($request);
     }
 
     public function getSubmissionShow(Request $request)
     {
-        return FormService::getSubmissionShow($request);
+        return SchemaService::getSubmissionShow($request);
     }
 
     public function deleteSubmission(Request $request)
     {
-        return FormService::deleteSubmission($request);
+        return SchemaService::deleteSubmission($request);
     }
 
     public function getEditBuilderUrl(Request $request)
     {
-        return FormService::getEditBuilderUrl($request);
+        return SchemaService::getEditBuilderUrl($request);
     }
 }
