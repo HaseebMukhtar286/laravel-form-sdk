@@ -10,6 +10,7 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSchema;
+use haseebmukhtar286\LaravelFormSdk\Services\FormService;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
 use Maatwebsite\Excel\Facades\Excel;
 use haseebmukhtar286\LaravelFormSdk\Exports\SubmitionExport;
@@ -20,7 +21,7 @@ class ExcelGenerateService
     public static function excelgenerate($id)
     {
         if ($id) {
-            $schemaData =  FormSchema::find($id);
+            $schemaData = FormService::showFormById($id);
             $dbData =  FormSubmission::where('form_id', $id)->get();
             if ($dbData && $schemaData) {
                 $dataArray = self::dataPrepare($schemaData['schema']);

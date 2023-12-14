@@ -24,9 +24,9 @@ class SchemaController extends Controller
         return SchemaService::createForm($request);
     }
 
-    public function showFormById(Request $request)
+    public function showFormById($id)
     {
-        return SchemaService::showFormById($request);
+        return SchemaService::showFormById($id);
     }
 
     public function updateFormById(Request $request)
