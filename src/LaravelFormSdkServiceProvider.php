@@ -17,7 +17,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::prefix('/api')->group(function () {
+        Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);
             // Route::post('/outlaw-form', [FormController::class, 'store']);
             // Route::get('/outlaw-form/{id}', [FormController::class, 'show']);
