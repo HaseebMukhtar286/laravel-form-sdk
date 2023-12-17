@@ -25,17 +25,19 @@ class ExcelGenerateService
             $dbData =  FormSubmission::where('form_id', $id)->get();
             if ($dbData && $schemaData) {
                 $dataArray = self::dataPrepare($schemaData['data']['schema']);
-                $colNames = [];
-                $colValues = [];
+                $dataArr = [];
+                $finalArr = [];
                 foreach ($dbData as $key => $value) {
                     foreach ($value['data'] as $key1 => $value1) {
                         if (array_key_exists($key1, $dataArray)) {
-                            $colNames[] = $dataArray[$key1];
-                            $colValues[] = $value1;
+                            $data = trim(str_replace(array("\r", "\n", '"', ',', ';', '<', '>'), ' ', $dataArray[$key1]));
+                            $colName = $data === "" ? $key1 : $data;
+                            $dataArr[$colName] = $value1;
                         }
                     }
+                    array_push($finalArr, $dataArr);
                 }
-                return Excel::download(new SubmitionExport($colNames, $colValues), 'data.xlsx');
+                return Excel::download(new SubmitionExport($finalArr), 'data.xlsx');
             }
         }
     }

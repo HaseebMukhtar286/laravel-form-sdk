@@ -8,24 +8,24 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class SubmitionExport implements FromCollection, WithHeadings
 {
-    protected $colNames;
+    protected $dataArr;
     protected $colValues;
 
-    public function __construct($colNames, $colValues)
+    public function __construct($finalArr)
     {
-        $this->colNames = $colNames;
-        $this->colValues = $colValues;
+
+        $this->dataArr = $finalArr;
     }
 
     public function collection()
     {
-        $data = [$this->colValues];
+        $data = [$this->dataArr];
 
         return collect($data);
     }
 
     public function headings(): array
     {
-        return $this->colNames;
+        return isset($this->dataArr[0]) ? array_keys($this->dataArr[0]) : [];
     }
 }

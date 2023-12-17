@@ -49,6 +49,7 @@ class ApiService
     public static function jsonFormat($response)
     {
 
-        return response()->json(json_decode($response->getBody()->getContents(), true), $response->getStatusCode());
+        // return response()->json(json_decode($response->getBody()->getContents(), true), $response->getStatusCode());
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
