@@ -53,6 +53,10 @@ class ExcelGenerateService
             $current = $item['value'];
 
             if (is_array($current)) {
+                if (isset($current["skip-in-excel"]) && $current["skip-in-excel"] == true) {
+
+                    continue;
+                }
                 $id = $key;
                 $component = $current["title"] ?? '';
                 $idToComponentMap[$id] = $component;
