@@ -70,12 +70,11 @@ class SchemaService
     public static function fillForm(Request $request)
     {
         $uri = '/fill';
-        $body = json_encode([
-            "secret" => ApiService::initialize(),
+        $body = [
             "id" => $request->id,
             "data" => $request->data,
             "user_id" => auth()->user()->_id
-        ]);
+        ];
 
         [$result] = ApiService::makeRequest('POST', $uri, ['body' => $body]);
         return $result;
@@ -84,11 +83,10 @@ class SchemaService
     public static function updateSubmissionForm(Request $request)
     {
         $uri = '/submission/update';
-        $body = json_encode([
-            "secret" => ApiService::initialize(),
+        $body = [
             "id" => $request->id,
             "data" => $request->data,
-        ]);
+        ];
 
         [$result] = ApiService::makeRequest('PUT', $uri, ['body' => $body]);
         return $result;
@@ -97,7 +95,7 @@ class SchemaService
     public static function getAllSubmissionForm(Request $request)
     {
         $uri = '/submissions';
-        $body = json_encode(["id" => $request->id]);
+        $body = ["id" => $request->id];
         [$result] = ApiService::makeRequest('GET', $uri, ['body' => $body]);
         return $result;
     }
@@ -105,7 +103,7 @@ class SchemaService
     public static function getSubmissionShow(Request $request)
     {
         $uri = '/submissions/show';
-        $body = json_encode(["id" => $request->id]);
+        $body = ["id" => $request->id];
         [$result] = ApiService::makeRequest('GET', $uri, ['body' => $body]);
         return $result;
     }
@@ -113,7 +111,7 @@ class SchemaService
     public static function deleteSubmission(Request $request)
     {
         $uri = '/submissions/delete';
-        $body = json_encode(["id" => $request->id]);
+        $body = ["id" => $request->id];
         [$result] = ApiService::makeRequest('DELETE', $uri, ['body' => $body]);
         return $result;
     }
@@ -121,8 +119,7 @@ class SchemaService
     public static function getEditBuilderUrl(Request $request)
     {
         $uri = '/otp';
-        $body = json_encode(["secret" => ApiService::initialize()]);
-        [$result] = ApiService::makeRequest('POST', $uri, ['body' => $body]);
+        [$result] = ApiService::makeRequest('POST', $uri);
         return $result;
     }
 }
