@@ -41,13 +41,13 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
 
                 Route::get('/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
                 Route::get('/builder', [SchemaController::class, 'getBuilder']);
-                Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
+                // Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
 
-                Route::put('/submission/update/{id}', [SchemaController::class, 'updateSubmissionForm']);
-                Route::get('/submissions/{id}', [SchemaController::class, 'getAllSubmissionForm']);
-                Route::get('/submission/{id}', [SchemaController::class, 'getSubmissionShow']);
-                Route::delete('/submission/delete/{id}', [SchemaController::class, 'deleteSubmission']);
-                Route::get('/edit-builder/{id}', [SchemaController::class, 'getEditBuilderUrl']);
+                // Route::put('/submission/update/{id}', [SchemaController::class, 'updateSubmissionForm']);
+                // Route::get('/submissions/{id}', [SchemaController::class, 'getAllSubmissionForm']);
+                // Route::get('/submission/{id}', [SchemaController::class, 'getSubmissionShow']);
+                // Route::delete('/submission/delete/{id}', [SchemaController::class, 'deleteSubmission']);
+                // Route::get('/edit-builder/{id}', [SchemaController::class, 'getEditBuilderUrl']);
             });
 
             Route::get('excelgenerate/{id}', [ExcelGenerateController::class, 'excelGenerate']);
