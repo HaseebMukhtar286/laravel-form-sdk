@@ -17,19 +17,20 @@ class ApiService
         self::$secret = env('BUILDER_SECRET');
     }
 
-    public static function makeRequest($method, $uri, $data = [])
+    public static function makeRequest($method, $uri, $data = null)
     {
         self::initialize();
 
+        $data['secret'] = self::$secret;
         $client = new \GuzzleHttp\Client([
             'headers' => ['Content-Type' => 'application/json'],
-            'json' => ['secret' => self::$secret], // Include secret in every request
+            'json' => $data,
         ]);
 
         $url = self::$baseUrl . $uri;
 
         try {
-            $response = $client->request($method, $url, $data);
+            $response = $client->request($method, $url);
 
             return [
                 self::jsonFormat($response),

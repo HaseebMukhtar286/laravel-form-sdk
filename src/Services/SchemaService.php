@@ -18,12 +18,12 @@ class SchemaService
     public static function createForm(Request $request)
     {
         $uri = '/form';
-        $body = json_encode([
+        $body = [
             "name" => $request->name,
             "icon" => $request->icon,
-        ]);
+        ];
 
-        [$result] = ApiService::makeRequest('POST', $uri, ['body' => $body]);
+        [$result] = ApiService::makeRequest('POST', $uri, $body);
         return $result;
     }
 
