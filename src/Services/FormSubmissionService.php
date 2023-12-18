@@ -16,7 +16,8 @@ class FormSubmissionService
     public static function paginate($request)
     {
         $per_page = $request->per_page ? $request->per_page : 20;
-        $collection = FormSubmission::where('form_id', $request->id)->with('user')->orderBy('created_at', 'dsc')
+        // $collection = FormSubmission::where('form_id', $request->id)->with('user')->orderBy('created_at', 'dsc')
+        $collection = FormSubmission::with('user')->orderBy('created_at', 'dsc')
             // ->with('region:name', 'site', 'user')
             // ->whereRelation('site', 'active', true)
         ;
