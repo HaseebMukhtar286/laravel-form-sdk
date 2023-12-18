@@ -40,9 +40,9 @@ class SchemaService
     {
         $id = $request->id;
         $uri = "/form/$id";
-        $body = json_encode(["rawForm" => $request->rawForm]);
+        $body = ["rawForm" => $request->rawForm];
 
-        [$result] = ApiService::makeRequest('PUT', $uri, ['body' => $body]);
+        [$result] = ApiService::makeRequest('PUT', $uri,  $body);
         return $result;
     }
 
@@ -63,8 +63,7 @@ class SchemaService
     public static function getBuilder(Request $request)
     {
         $uri = '/otp';
-        $body = json_encode(["secret" => ApiService::initialize()]);
-        [$result] = ApiService::makeRequest('POST', $uri, ['body' => $body]);
+        [$result] = ApiService::makeRequest('POST', $uri);
         return $result;
     }
 
