@@ -32,6 +32,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
                 // Route::get('moc-dashboard', [FormSubmissionController::class, 'dashboard']);
             });
 
+            // for schema controller
             Route::prefix('form')->group(function () {
                 Route::get('/', [SchemaController::class, 'listingBySecretKey']);
                 Route::post('create', [SchemaController::class, 'createForm']);

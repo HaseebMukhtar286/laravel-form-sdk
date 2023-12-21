@@ -49,33 +49,33 @@ class SchemaController extends Controller
         return SchemaService::getBuilder($request);
     }
 
-    public function fillForm(Request $request)
-    {
-        return SchemaService::fillForm($request);
-    }
+    // public function fillForm(Request $request)
+    // {
+    //     return SchemaService::fillForm($request);
+    // }
 
-    public function updateSubmissionForm(Request $request)
-    {
-        return SchemaService::updateSubmissionForm($request);
-    }
+    // public function updateSubmissionForm(Request $request)
+    // {
+    //     return SchemaService::updateSubmissionForm($request);
+    // }
 
-    public function getAllSubmissionForm(Request $request)
-    {
-        return SchemaService::getAllSubmissionForm($request);
-    }
+    // public function getAllSubmissionForm(Request $request)
+    // {
+    //     return SchemaService::getAllSubmissionForm($request);
+    // }
 
-    public function getSubmissionShow(Request $request)
-    {
-        return SchemaService::getSubmissionShow($request);
-    }
+    // public function getSubmissionShow(Request $request)
+    // {
+    //     return SchemaService::getSubmissionShow($request);
+    // }
 
-    public function deleteSubmission(Request $request)
-    {
-        return SchemaService::deleteSubmission($request);
-    }
+    // public function deleteSubmission(Request $request)
+    // {
+    //     return SchemaService::deleteSubmission($request);
+    // }
 
-    public function getEditBuilderUrl(Request $request)
-    {
-        return SchemaService::getEditBuilderUrl($request);
-    }
+    // public function getEditBuilderUrl(Request $request)
+    // {
+    //     return SchemaService::getEditBuilderUrl($request);
+    // }
 }
