@@ -9,11 +9,13 @@ use Illuminate\Http\JsonResponse;
 class ApiService
 {
     public static $baseUrl;
+    public static $FrontendUrl;
     private static $secret;
 
     public static function initialize()
     {
         self::$baseUrl = env('BUILDER_URL');
+        self::$FrontendUrl = env('BUILDER_FRONTEND_URL');
         self::$secret = env('BUILDER_SECRET');
     }
 
