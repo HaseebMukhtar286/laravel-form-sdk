@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 class ApiService
 {
-    private static $baseUrl;
+    public static $baseUrl;
     private static $secret;
 
     public static function initialize()

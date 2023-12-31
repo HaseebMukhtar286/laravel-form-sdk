@@ -41,7 +41,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
                 Route::delete('delete/{id}', [SchemaController::class, 'deleteFormById']);
 
                 Route::get('/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
-                Route::get('/builder', [SchemaController::class, 'getBuilder']);
+                Route::get('/builder/{id}', [SchemaController::class, 'getBuilder']);
                 // Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
 
                 // Route::put('/submission/update/{id}', [SchemaController::class, 'updateSubmissionForm']);

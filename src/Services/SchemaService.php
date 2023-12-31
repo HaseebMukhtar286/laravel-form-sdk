@@ -63,8 +63,16 @@ class SchemaService
     public static function getBuilder(Request $request)
     {
         $uri = '/otp';
-        [$result] = ApiService::makeRequest('POST', $uri);
-        return $result;
+        [$result, $result2] = ApiService::makeRequest('POST', $uri);
+        $builderLink = ApiService::$baseUrl;
+
+        $resultArr = [
+            'link' => $builderLink . "otp/" . $result2["otp"] . "/" . $request->id,
+            'localHost' => "http://localhost:3000/" . "otp/" . $result2["otp"] . "/" . $request->id
+        ];
+
+        return response()->json($resultArr, 200);
+        // return $result;
     }
 
     // public static function fillForm(Request $request)
