@@ -17,6 +17,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::get('/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);
             // Route::post('/outlaw-form', [FormController::class, 'store']);
@@ -40,7 +41,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
                 Route::post('update', [SchemaController::class, 'updateFormById']);
                 Route::delete('delete/{id}', [SchemaController::class, 'deleteFormById']);
 
-                Route::get('/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
+
                 Route::get('/builder/{id}', [SchemaController::class, 'getBuilder']);
                 // Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
 
