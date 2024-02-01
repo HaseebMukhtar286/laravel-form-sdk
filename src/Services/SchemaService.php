@@ -75,6 +75,18 @@ class SchemaService
         // return $result;
     }
 
+    public static function changeStatus(Request $request)
+    {
+        $uri = '/form/change-status';
+        $body = [
+            "id" => $request->id,
+            "status" => $request->status,
+        ];
+
+        [$result] = ApiService::makeRequest('POST', $uri, $body);
+        return $result;
+    }
+
     // public static function fillForm(Request $request)
     // {
     //     $uri = '/fill';

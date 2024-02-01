@@ -49,6 +49,11 @@ class SchemaController extends Controller
         return SchemaService::getBuilder($request);
     }
 
+    public function changeStatus(Request $request)
+    {
+        return SchemaService::changeStatus($request);
+    }
+
     // public function fillForm(Request $request)
     // {
     //     return SchemaService::fillForm($request);

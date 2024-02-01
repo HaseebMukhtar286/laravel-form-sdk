@@ -43,6 +43,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
 
 
                 Route::get('/builder/{id}', [SchemaController::class, 'getBuilder']);
+                Route::post('change-status', [SchemaController::class, 'changeStatus']);
                 // Route::post('/fill/{id}', [SchemaController::class, 'fillForm']);
 
                 // Route::put('/submission/update/{id}', [SchemaController::class, 'updateSubmissionForm']);
