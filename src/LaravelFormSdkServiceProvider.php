@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use haseebmukhtar286\LaravelFormSdk\Controllers\FormSubmissionController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\SchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ExcelGenerateController;
+use haseebmukhtar286\LaravelFormSdk\Controllers\ImageUploadController;
 
 class LaravelFormSdkServiceProvider extends ServiceProvider
 {
@@ -54,6 +55,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             });
 
             Route::get('excelgenerate/{id}', [ExcelGenerateController::class, 'excelGenerate']);
+            Route::post('image-upload', [ImageUploadController::class, 'imageUpload']);
         });
         /*
          * Optional methods to load your package assets
