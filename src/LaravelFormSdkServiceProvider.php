@@ -19,6 +19,8 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
+        Route::post('api/image-upload', [ImageUploadController::class, 'imageUpload']);
+
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);
             // Route::post('/outlaw-form', [FormController::class, 'store']);
@@ -55,7 +57,6 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             });
 
             Route::get('excelgenerate/{id}', [ExcelGenerateController::class, 'excelGenerate']);
-            Route::post('image-upload', [ImageUploadController::class, 'imageUpload']);
         });
         /*
          * Optional methods to load your package assets
