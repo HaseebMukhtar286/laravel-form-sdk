@@ -19,7 +19,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
-        Route::post('api/image-upload', [ImageUploadController::class, 'imageUpload']);
+        Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
 
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);

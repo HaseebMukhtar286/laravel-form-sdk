@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Storage;
 class ImageUploadService
 {
 
-    public static function imageUpload($request)
+    public static function imageUpload($request,$id)
     {
-        if($request->get('image_upload_key') == env('APP_IMAGE_KEY')){
+        if($id == env('APP_IMAGE_KEY')){
             $imageName = env('APP_IMAGE_KEY');
             $image = $request->file('file');
             if ($image) {
