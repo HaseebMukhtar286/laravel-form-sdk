@@ -10,8 +10,8 @@ use haseebmukhtar286\LaravelFormSdk\Services\ImageUploadService;
 class ImageUploadController extends Controller
 {
 
-  public function imageUpload(Request $request)
+  public function imageUpload(Request $request,$id)
   {
-    return ImageUploadService::imageUpload($request);
+    return ImageUploadService::imageUpload($request,$id);
   }
 }
