@@ -36,6 +36,17 @@ class FormSubmissionService
         return response()->json(['data' => $collection], 200);
     }
 
+    public static function all($request)
+    {
+        if($request->id){
+            $collection = FormSubmission::where('form_id', $request->id)->orderBy('created_at', 'dsc');
+            
+            $collection = $collection->get();
+            return response()->json(['data' => $collection], 200);
+        }
+        return response()->json(['data' => []], 400);
+    }
+
     public static function find($id)
     {
         $collection = FormSubmission::where('_id', $id)->with('user')
