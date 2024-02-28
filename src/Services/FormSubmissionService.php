@@ -38,11 +38,16 @@ class FormSubmissionService
 
     public static function all($request)
     {
-        if($request->id){
+        if ($request->id) {
             $collection = FormSubmission::where('form_id', $request->id)->orderBy('created_at', 'dsc');
-            
+
             $collection = $collection->get();
-            return response()->json(['data' => $collection], 200);
+
+            $uri = "/form/" . $request->id;
+
+            [$result] = ApiService::makeRequest('GET', $uri);
+
+            return response()->json(['data' => $collection, 'schema' => $result], 200);
         }
         return response()->json(['data' => []], 400);
     }
