@@ -10,6 +10,7 @@ use haseebmukhtar286\LaravelFormSdk\Controllers\FormSubmissionController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\SchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ExcelGenerateController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ImageUploadController;
+use haseebmukhtar286\LaravelFormSdk\Controllers\PdfController;
 
 class LaravelFormSdkServiceProvider extends ServiceProvider
 {
@@ -58,6 +59,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             });
 
             Route::get('excelgenerate/{id}', [ExcelGenerateController::class, 'excelGenerate']);
+            Route::get('extractPdfData/{id}', [PdfController::class, 'pdfGenerate']);
         });
         /*
          * Optional methods to load your package assets
