@@ -32,6 +32,9 @@ class FormSubmissionService
             $toDate = Carbon::parse($request->toDate);
             $collection = $collection->whereBetween('created_at', [$fromDate->startOfDay(), $toDate->endOfDay()]);
         }
+        if (!auth()->user()->isAdmin()) {
+            $collection = $collection->where("user_id", auth()->user()->_id);
+        }
         $collection = $collection->paginate(intVal($per_page));
         return response()->json(['data' => $collection], 200);
     }
