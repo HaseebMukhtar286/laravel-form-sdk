@@ -21,6 +21,20 @@ class SchemaService
         $body = [
             "name" => $request->name,
             "icon" => $request->icon,
+            "meta_data" => $request['meta_data'] ?? null,
+        ];
+
+        [$result] = ApiService::makeRequest('POST', $uri, $body);
+        return $result;
+    }
+    public static function updateForm(Request $request)
+    {
+        $uri = '/form/update-form';
+        $body = [
+            "name" => $request->name,
+            "icon" => $request->icon,
+            "meta_data" => $request['meta_data'] ?? null,
+            "id" => $request["id"] ?? null
         ];
 
         [$result] = ApiService::makeRequest('POST', $uri, $body);

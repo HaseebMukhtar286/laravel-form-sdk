@@ -42,6 +42,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             Route::prefix('form')->group(function () {
                 Route::get('/', [SchemaController::class, 'listingBySecretKey']);
                 Route::post('create', [SchemaController::class, 'createForm']);
+                Route::post('update-form', [SchemaController::class, 'updateForm']);
                 Route::get('show/{id}', [SchemaController::class, 'showFormById']);
                 Route::post('update', [SchemaController::class, 'updateFormById']);
                 Route::delete('delete/{id}', [SchemaController::class, 'deleteFormById']);
