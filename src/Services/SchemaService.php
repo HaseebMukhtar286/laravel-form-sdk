@@ -41,10 +41,10 @@ class SchemaService
         return $result;
     }
 
-    public static function showFormById($id)
+    public static function showFormById(Request $request,$id)
     {
         // $id = $request->id;
-        $uri = "/form/$id";
+        $uri = "/form/$id?isDev=".$request->isDev;
 
         [$result] = ApiService::makeRequest('GET', $uri);
         return $result;
