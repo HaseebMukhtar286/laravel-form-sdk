@@ -17,10 +17,16 @@ class FormSubmission extends Model
         "form_id",
         "data",
         "user_id",
-        "schema_published_version",
+        "schema_version",
         "report_no"
     ];
 
+    protected $appends = ['report_slug'];
+
+    function getReportSlugAttribute()
+    {
+        return env('REPORT_NUMBER_SLUG');
+    }
 
     public function user()
     {
