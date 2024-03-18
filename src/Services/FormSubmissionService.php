@@ -70,7 +70,9 @@ class FormSubmissionService
         $data  = [
             "form_id" => $request->id,
             "data" => $request->data,
-            "user_id" => auth()->user()->_id
+            "user_id" => auth()->user()->_id,
+            "schema_published_version" => $request->schema_published_version ? $request->schema_published_version : '',
+            "report_id" => $request->report_id ? $request->report_id : '',
         ];
         $submission = FormSubmission::create($data);
         if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
