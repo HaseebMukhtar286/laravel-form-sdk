@@ -18,7 +18,7 @@ class FormSubmission extends Model
         "data",
         "user_id",
         "schema_published_version",
-        "report_id"
+        "report_no"
     ];
 
 
