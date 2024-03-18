@@ -10,6 +10,7 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
+use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
 
 class FormSubmissionService
 {
@@ -72,13 +73,27 @@ class FormSubmissionService
             "data" => $request->data,
             "user_id" => auth()->user()->_id,
             "schema_published_version" => $request->schema_published_version ? $request->schema_published_version : '',
-            "report_id" => $request->report_id ? $request->report_id : '',
+            "report_no" => Declarations::REPORT_NO['REPORT_SLUG'] . self::generateReportNo(),
         ];
         $submission = FormSubmission::create($data);
         if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
 
         return response()->json(['data' => 'Submission Successfully created'], 200);
     }
+
+    //update the ReportNumber model
+    private static function generateReportNo()
+    {
+        $reportCountValue = 1;
+        $result = ReportNumber::select("reportCount")->first();
+        if($result){
+            $reportCountValue = (int)$result['reportCount'] + 1;
+        }
+        $result->reportCount = $reportCountValue;
+        $result->save();
+        return $reportCountValue;
+    }
+
 
     public static function update($request)
     {
