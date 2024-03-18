@@ -85,12 +85,14 @@ class FormSubmissionService
     private static function generateReportNo()
     {
         $reportCountValue = 1;
-        $result = ReportNumber::select("reportCount")->first();
-        if($result){
-            $reportCountValue = (int)$result['reportCount'] + 1;
+        $result = ReportNumber::first();
+        if ($result) {
+            $reportCountValue = (int)$result->reportCount + 1;
+            $result->reportCount = $reportCountValue;
+            $result->save();
+        } else {
+            ReportNumber::create(['reportCount' => $reportCountValue]);
         }
-        $result->reportCount = $reportCountValue;
-        $result->save();
         return $reportCountValue;
     }
 
