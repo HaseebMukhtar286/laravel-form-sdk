@@ -25,7 +25,7 @@ class FormSubmission extends Model
 
     function getReportSlugAttribute()
     {
-        return env('REPORT_NUMBER_SLUG');
+        return env('REPORT_NUMBER_SLUG'). $this->report_no;
     }
 
     public function user()
