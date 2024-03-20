@@ -18,7 +18,8 @@ class FormSubmission extends Model
         "data",
         "user_id",
         "schema_version",
-        "report_no"
+        "report_no",
+        "status"
     ];
 
     protected $appends = ['report_slug'];

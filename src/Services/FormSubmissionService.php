@@ -217,7 +217,8 @@ class FormSubmissionService
 
     public static function approve($request)
     {
-        if($request->id){
+        $collection = FormSubmission::where('_id', $request->id)->first();
+        if (isset($collection)) {
             $status =  PackageDeclarations::ALL_STATUS['APPROVED'];
             $data  = [
                 "form_id" => $request->id,
@@ -226,15 +227,18 @@ class FormSubmissionService
                 'status' => $status
             ];
             FormSubmissionHistory::create($data);
-            return response()->json(['data' => 'Submission '.$status.' Successfully'], 200);
+            $collection->status = $status;
+            $collection->save();
+            return response()->json(['data' => 'Submission ' . $status . ' Successfully'], 200);
+        } else {
+            return response()->json(['data' => ['Form Not Found']], 400);
         }
-
-        return response()->json(['data' => []], 400);
     }
 
     public static function reject($request)
     {
-        if ($request->id) {
+        $collection = FormSubmission::where('_id', $request->id)->first();
+        if (isset($collection)) {
             $status =  PackageDeclarations::ALL_STATUS['REJECTED'];
             $data  = [
                 "form_id" => $request->id,
@@ -243,9 +247,11 @@ class FormSubmissionService
                 'status' => $status
             ];
             FormSubmissionHistory::create($data);
+            $collection->status = $status;
+            $collection->save();
             return response()->json(['data' => 'Submission ' . $status . ' Successfully'], 200);
+        } else {
+            return response()->json(['data' => ['Form Not Found']], 400);
         }
-
-        return response()->json(['data' => []], 400);
     }
 }
