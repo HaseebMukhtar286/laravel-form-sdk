@@ -10,7 +10,9 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
+use haseebmukhtar286\LaravelFormSdk\Models\FormSubmissionHistory;
 use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
+use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations AS PackageDeclarations;
 
 class FormSubmissionService
 {
@@ -211,5 +213,39 @@ class FormSubmissionService
             $formattedTime = gmdate("H:i", $totalSeconds);
         }
         return $formattedTime;
+    }
+
+    public static function approve($request)
+    {
+        if($request->id){
+            $status =  PackageDeclarations::ALL_STATUS['APPROVED'];
+            $data  = [
+                "form_id" => $request->id,
+                "reason" => $request->reason ?? $request->reason,
+                "user_id" => auth()->user()->_id,
+                'status' => $status
+            ];
+            FormSubmissionHistory::create($data);
+            return response()->json(['data' => 'Submission '.$status.' Successfully'], 200);
+        }
+
+        return response()->json(['data' => []], 400);
+    }
+
+    public static function reject($request)
+    {
+        if ($request->id) {
+            $status =  PackageDeclarations::ALL_STATUS['REJECTED'];
+            $data  = [
+                "form_id" => $request->id,
+                "reason" => $request->reason ?? $request->reason,
+                "user_id" => auth()->user()->_id,
+                'status' => $status
+            ];
+            FormSubmissionHistory::create($data);
+            return response()->json(['data' => 'Submission ' . $status . ' Successfully'], 200);
+        }
+
+        return response()->json(['data' => []], 400);
     }
 }

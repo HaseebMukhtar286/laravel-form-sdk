@@ -35,6 +35,16 @@ class FormSubmissionController extends Controller
     {
         return FormSubmissionService::create($request);
     }
+
+    public function approve(Request $request)
+    {
+        return FormSubmissionService::approve($request);
+    }
+
+    public function reject(Request $request)
+    {
+        return FormSubmissionService::reject($request);
+    }
     public function update(Request $request)
     {
         return FormSubmissionService::update($request);
