@@ -37,7 +37,7 @@ class FormSubmissionService
         }
         if (!auth()->user()->isAdmin()) {
             $collection = $collection->where("user_id", auth()->user()->_id);
-            $collection = $collection->whereIn('region_id', auth()->user()->region_ids);
+            $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
         }
         $collection = $collection->paginate(intVal($per_page));
         return response()->json(['data' => $collection], 200);
