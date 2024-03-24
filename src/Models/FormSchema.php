@@ -10,20 +10,14 @@ class FormSchema extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        "schema",
-        "name",
-        "questions",
-        "projectId",
-        "icon",
+        // "name",
+        // "projectId",
+        // "icon",
+        // "status",
+        // "schema",
+        // "slug",
+        "form_id",
+        "data",
+        "schema_version"
     ];
-
-    // public function project()
-    // {
-    //     return $this->belongsTo(Project::class, 'projectId');
-    // }
-
-    // public function getProjectNameAttribute()
-    // {
-    //     return $this->project->name ?? null;
-    // }
 }

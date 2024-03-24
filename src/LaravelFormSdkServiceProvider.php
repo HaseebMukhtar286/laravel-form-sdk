@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use haseebmukhtar286\LaravelFormSdk\Controllers\FormSubmissionController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\SchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ExcelGenerateController;
+use haseebmukhtar286\LaravelFormSdk\Controllers\FormSchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ImageUploadController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\PdfController;
 
@@ -21,6 +22,10 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
     {
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
         Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
+        
+        Route::prefix('api/formSchema')->group(function () {
+            Route::post('create', [FormSchemaController::class, 'store']);
+        });
 
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);
