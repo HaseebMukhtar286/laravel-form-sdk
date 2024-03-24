@@ -12,7 +12,7 @@ use Illuminate\Support\Arr;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmissionHistory;
 use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
-use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations AS PackageDeclarations;
+use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations as PackageDeclarations;
 
 class FormSubmissionService
 {
@@ -36,8 +36,11 @@ class FormSubmissionService
             $collection = $collection->whereBetween('created_at', [$fromDate->startOfDay(), $toDate->endOfDay()]);
         }
         if (!auth()->user()->isAdmin()) {
-            $collection = $collection->where("user_id", auth()->user()->_id);
-            $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
+            if (auth()->user()->region_ids) {
+                $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
+            } else {
+                $collection = $collection->where("user_id", auth()->user()->_id);
+            }
         }
         $collection = $collection->paginate(intVal($per_page));
         return response()->json(['data' => $collection], 200);
