@@ -9,9 +9,9 @@ class FormSchemaService
     public static function create($request)
     {
         $data  = [
-            "form_id" => $request->data['_id'],
+            "form_id" => $request->schema_id,
             "data" => $request->data,
-            "schema_version" => $request->schema_version,
+            "schema_version" => $request->version,
         ];
         $res = FormSchema::create($data);
         if (!$res) return response()->json(['data' => "Submisson not created"], 402);
