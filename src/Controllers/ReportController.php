@@ -4,6 +4,7 @@
 namespace haseebmukhtar286\LaravelFormSdk\Controllers;
 
 use App\Http\Controllers\Controller;
+use haseebmukhtar286\LaravelFormSdk\Models\FormSchema;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
 use haseebmukhtar286\LaravelFormSdk\Services\FormSchemaService;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ReportController extends Controller
         }
 
         if ($request->slug) {
-            $formId = FormSchemaService::select('form_id')->where('data.slug', $request->slug)->first();
+            $formId = FormSchema::select('form_id')->where('data.slug', $request->slug)->first();
             if ($formId) {
 
                 $id = '65f19406c304a7319c0f6a1c';
