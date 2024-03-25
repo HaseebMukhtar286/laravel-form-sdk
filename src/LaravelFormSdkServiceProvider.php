@@ -12,6 +12,7 @@ use haseebmukhtar286\LaravelFormSdk\Controllers\ExcelGenerateController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\FormSchemaController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\ImageUploadController;
 use haseebmukhtar286\LaravelFormSdk\Controllers\PdfController;
+use haseebmukhtar286\LaravelFormSdk\Controllers\ReportController;
 
 class LaravelFormSdkServiceProvider extends ServiceProvider
 {
@@ -20,11 +21,20 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // $this->addDynamicMiddlewareToKernel();
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
         Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
         
         Route::prefix('api/formSchema')->group(function () {
             Route::post('create', [FormSchemaController::class, 'store']);
+        });
+
+        // Route::prefix('api')->middleware('your.dynamic.middleware')->group(function () {
+        //     Route::get('/submition-data', [ReportController::class, 'submitionData']);
+        // });
+
+        Route::prefix('api')->group(function () {
+            Route::get('/submition-data', [ReportController::class, 'submitionData']);
         });
 
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
@@ -114,5 +124,48 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-form-sdk', function () {
             return new LaravelFormSdk;
         });
+
+        // Register dynamic middleware
+        // $this->registerDynamicMiddleware();
     }
+
+    // private function registerDynamicMiddleware()
+    // {
+    //     $middlewareFilePath = app_path('Http/Middleware/YourDynamicMiddleware.php');
+
+    //     if (!class_exists(\App\Http\Middleware\YourDynamicMiddleware::class) && file_exists($middlewareFilePath)) {
+    //         require_once $middlewareFilePath;
+    //     }
+
+    //     if (class_exists(\App\Http\Middleware\YourDynamicMiddleware::class)) {
+    //         // Register the middleware under a custom name
+    //         app('router')->aliasMiddleware('your.dynamic.middleware', \App\Http\Middleware\YourDynamicMiddleware::class);
+    //     }
+    // }
+
+    // private function addDynamicMiddlewareToKernel()
+    // {
+    //     if (!class_exists(\App\Http\Middleware\YourDynamicMiddleware::class)) {
+    //         // If it doesn't exist, dynamically create it
+    //         file_put_contents(app_path('Http/Middleware/YourDynamicMiddleware.php'), '<?php
+
+    //             namespace App\Http\Middleware;
+
+    //             use Closure;
+
+    //             class YourDynamicMiddleware
+    //             {
+    //                 public function handle($request, Closure $next)
+    //                 {
+    //                     if ($request->api_key != "LjRcW9cKRdUsmMD0FNJrJTmbxi") {
+    //                     return response()->json(["message" => "Unauthenticated."], 401);
+    //                 }
+    //                     // Middleware logic here
+    //                     return $next($request);
+    //                 }
+    //             }
+    //             ');
+    //         $this->app[Kernel::class]->pushMiddleware(\App\Http\Middleware\YourDynamicMiddleware::class);
+    //     }
+    // }
 }
