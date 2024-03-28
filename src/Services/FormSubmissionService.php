@@ -36,7 +36,7 @@ class FormSubmissionService
             $collection = $collection->whereBetween('created_at', [$fromDate->startOfDay(), $toDate->endOfDay()]);
         }
         if (!auth()->user()->isAdmin()) {
-            if (auth()->user()->region_ids) {
+            if (auth()->user()->region_ids && (auth()->user()->isTopThree() || auth()->user()->isClusterManager())) {
                 $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
             } else {
                 $collection = $collection->where("user_id", auth()->user()->_id);
