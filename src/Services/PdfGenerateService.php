@@ -13,7 +13,7 @@ class PdfGenerateService
     public static function pdfGenerate($id)
     {
         if ($id) {
-            $formSubmission = FormSubmission::find($id);
+            $formSubmission = FormSubmission::with("user")->find($id);
             if ($formSubmission) {
 
                 $data['formSubmission'] = $formSubmission;
