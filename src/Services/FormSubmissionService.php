@@ -28,7 +28,7 @@ class FormSubmissionService
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id)
-            ->with('user:name,email,type')
+            ->with('user:name,email,type', 'siteData')
             ->orderBy('created_at', 'dsc');
         if ($request->search) {
             // $collection->where(function ($subQuery) use ($request) {
