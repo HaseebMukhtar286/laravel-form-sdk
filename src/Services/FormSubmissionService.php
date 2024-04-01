@@ -18,11 +18,12 @@ class FormSubmissionService
 {
     public static function paginate($request)
     {
+        $columns = '*';
+        if (isset($request->columns)) {
+            $columns = [...$request->columns, 'user_id', 'created_at', 'status'];
+        }
         $per_page = $request->per_page ? $request->per_page : 20;
-        $collection = FormSubmission::where('form_id', $request->id)->with('user')->orderBy('created_at', 'dsc')
-            // ->with('region:name', 'site', 'user')
-            // ->whereRelation('site', 'active', true)
-        ;
+        $collection = FormSubmission::select($columns)->where('form_id', $request->id)->with('user')->orderBy('created_at', 'dsc');
         if ($request->search) {
             // $collection->where(function ($subQuery) use ($request) {
             //     $subQuery->whereRelation('region', 'name', 'LIKE', '%' . $request->search . '%')
