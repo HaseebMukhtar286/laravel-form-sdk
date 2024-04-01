@@ -20,7 +20,10 @@ class FormSubmissionService
     {
         $columns = '*';
         if (isset($request->columns)) {
-            $columns = [...$request->columns, 'user_id', 'created_at', 'status'];
+            $requestedColumns = array_filter($request->columns, function ($column) {
+                return strpos($column, 'data.') === 0;
+            });
+            $columns = [...$requestedColumns, 'user_id', 'created_at', 'status'];
         }
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
