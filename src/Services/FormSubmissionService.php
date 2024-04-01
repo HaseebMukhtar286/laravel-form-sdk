@@ -23,7 +23,10 @@ class FormSubmissionService
             $columns = [...$request->columns, 'user_id', 'created_at', 'status'];
         }
         $per_page = $request->per_page ? $request->per_page : 20;
-        $collection = FormSubmission::select($columns)->where('form_id', $request->id)->with('user')->orderBy('created_at', 'dsc');
+        $collection = FormSubmission::select($columns)
+            ->where('form_id', $request->id)
+            ->with('user:name,email,type')
+            ->orderBy('created_at', 'dsc');
         if ($request->search) {
             // $collection->where(function ($subQuery) use ($request) {
             //     $subQuery->whereRelation('region', 'name', 'LIKE', '%' . $request->search . '%')
