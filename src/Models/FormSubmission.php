@@ -35,7 +35,7 @@ class FormSubmission extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function siteData()
+    public function site()
     {
         return $this->belongsTo(ObligationSites::class, 'data.site.key');
     }
