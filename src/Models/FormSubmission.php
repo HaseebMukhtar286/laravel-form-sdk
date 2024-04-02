@@ -6,6 +6,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 use App\Traits\RoleTrait;
 use App\Models\User;
+use App\Models\ObligationSites;
 
 
 class FormSubmission extends Model
@@ -32,6 +33,11 @@ class FormSubmission extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function site()
+    {
+        return $this->belongsTo(ObligationSites::class, 'data.site.key');
     }
 
     
