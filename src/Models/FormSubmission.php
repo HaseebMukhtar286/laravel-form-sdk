@@ -23,12 +23,12 @@ class FormSubmission extends Model
         "status"
     ];
 
-    protected $appends = ['report_slug'];
+    protected $appends = [];
 
-    function getReportSlugAttribute()
-    {
-        return env('REPORT_NUMBER_SLUG'). $this->report_no;
-    }
+    // function getReportSlugAttribute()
+    // {
+    //     return env('REPORT_NUMBER_SLUG'). $this->report_no;
+    // }
 
     public function user()
     {
