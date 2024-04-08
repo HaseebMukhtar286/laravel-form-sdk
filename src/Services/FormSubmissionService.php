@@ -88,6 +88,9 @@ class FormSubmissionService
             "schema_version" => $request->schema_version ? $request->schema_version : '',
             "report_no" => (string) self::generateReportNo(),
         ];
+        if(auth()->user()->type != 'facility'){
+            $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
+        }
         $submission = FormSubmission::create($data);
         if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
 
