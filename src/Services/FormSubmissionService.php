@@ -31,11 +31,11 @@ class FormSubmissionService
             ->with('user:name,email,type')
             ->orderBy('created_at', 'dsc');
         if ($request->search) {
-            // $collection->where(function ($subQuery) use ($request) {
-            //     $subQuery->whereRelation('region', 'name', 'LIKE', '%' . $request->search . '%')
-            //         ->orWhereRelation('user', 'name', 'LIKE', '%' . $request->search . '%')
-            //         ->orWhereRelation('site', 'name', 'LIKE', '%' . $request->search . '%');
-            // });
+            $collection->where(function ($subQuery) use ($request, $columns) {
+                foreach ($columns as $column) {
+                    $subQuery->orWhere($column, 'LIKE', '%' . $request->search . '%');
+                }
+            });
         }
         if ($request->fromDate) {
             $fromDate = Carbon::parse($request->fromDate);
