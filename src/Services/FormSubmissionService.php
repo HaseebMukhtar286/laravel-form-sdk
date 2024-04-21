@@ -27,18 +27,16 @@ class FormSubmissionService
         }
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
-            ->where('form_id', $request->id);
-        if (class_exists('App\Models\ObligationSites')) {
-            $collection = $collection->with("user:name,email,type", 'site');
-        } else {
-            $collection = $collection->with("user:name,email,type");
-        }
-        $collection = $collection->orderBy('created_at', 'desc');
+            ->where('form_id', $request->id)
+            ->with("user:name,email,type")
+            ->orderBy('created_at', 'desc');
         if ($request->search) {
             $collection->where(function ($subQuery) use ($request, $columns) {
                 foreach ($columns as $column) {
                     if ($columns != '*') {
-                        $subQuery->orWhere($column, 'LIKE', '%' . $request->search . '%');
+                        foreach ($columns as $column) {
+                            $subQuery->orWhere($column . ".label", 'LIKE', '%' . $request->search . '%');
+                        }
                     }
                 }
             });
