@@ -27,13 +27,19 @@ class FormSubmissionService
         }
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
-            ->where('form_id', $request->id)
-            ->with('user:name,email,type')
-            ->orderBy('created_at', 'dsc');
+            ->where('form_id', $request->id);
+        if (class_exists('App\Models\ObligationSites')) {
+            $collection = $collection->with("user:name,email,type", 'site');
+        } else {
+            $collection = $collection->with("user:name,email,type");
+        }
+        $collection = $collection->orderBy('created_at', 'desc');
         if ($request->search) {
             $collection->where(function ($subQuery) use ($request, $columns) {
                 foreach ($columns as $column) {
-                    $subQuery->orWhere($column, 'LIKE', '%' . $request->search . '%');
+                    if ($columns != '*') {
+                        $subQuery->orWhere($column, 'LIKE', '%' . $request->search . '%');
+                    }
                 }
             });
         }
@@ -88,7 +94,7 @@ class FormSubmissionService
             "schema_version" => $request->schema_version ? $request->schema_version : '',
             "report_no" => (string) self::generateReportNo(),
         ];
-        if(auth()->user()->type != 'facility'){
+        if (auth()->user()->type != 'facility') {
             $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
         }
         $submission = FormSubmission::create($data);
