@@ -6,7 +6,6 @@ use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 use App\Traits\RoleTrait;
 use App\Models\User;
-use App\Models\ObligationSites;
 
 
 class FormSubmission extends Model
@@ -23,22 +22,15 @@ class FormSubmission extends Model
         "status"
     ];
 
-    protected $appends = [];
+    protected $appends = ['inspection_type'];
 
-    // function getReportSlugAttribute()
-    // {
-    //     return env('REPORT_NUMBER_SLUG'). $this->report_no;
-    // }
+    public function getInspectionTypeAttribute()
+    {
+        return  $this->user->type === "facility";
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function site()
-    {
-        return $this->belongsTo(ObligationSites::class, 'data.site.key');
-    }
-
-    
 }
