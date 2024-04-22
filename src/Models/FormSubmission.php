@@ -26,7 +26,7 @@ class FormSubmission extends Model
 
     public function getInspectionTypeAttribute()
     {
-        return  $this->user->type === "facility";
+        return  $this->user->type === "facility"? "Self assessment": "Inspection";
     }
 
     public function user()
