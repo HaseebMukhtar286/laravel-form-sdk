@@ -8,9 +8,9 @@ use Illuminate\Http\JsonResponse;
 
 class SchemaService
 {
-    public static function listingBySecretKey()
+    public static function listingBySecretKey($req)
     {
-        $uri = '/formListingData';
+        $uri = '/formListingData?page=' . $req["page"];
         [$result] = ApiService::makeRequest('GET', $uri);
         return $result;
     }
