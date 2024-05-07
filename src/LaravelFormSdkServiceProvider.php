@@ -23,6 +23,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
     {
         // $this->addDynamicMiddlewareToKernel();
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
+        Route::get('api/form/all-forms-list', [FormSchemaController::class, 'index']);
         Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
         
         Route::prefix('api/formSchema')->group(function () {
