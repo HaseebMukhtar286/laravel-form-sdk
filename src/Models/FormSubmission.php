@@ -19,7 +19,8 @@ class FormSubmission extends Model
         "user_id",
         "schema_version",
         "report_no",
-        "status"
+        "status",
+        "is_data_compiled"
     ];
 
     protected $appends = ['inspection_type'];
