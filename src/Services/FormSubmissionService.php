@@ -91,7 +91,6 @@ class FormSubmissionService
             "user_id" => auth()->user()->_id,
             "schema_version" => $request->schema_version ? $request->schema_version : '',
             "report_no" => (string) self::generateReportNo(),
-            "inspection_type" => auth()->user()->type ?? null === "facility" ? "Self assessment" : "Inspection"
         ];
         if (auth()->user()->type != 'facility') {
             $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];

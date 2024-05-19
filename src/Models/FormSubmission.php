@@ -20,16 +20,15 @@ class FormSubmission extends Model
         "schema_version",
         "report_no",
         "status",
-        "is_data_compiled",
-        "inspection_type"
+        "is_data_compiled"
     ];
 
-    // protected $appends = ['inspection_type'];
+    protected $appends = ['inspection_type'];
 
-    // public function getInspectionTypeAttribute()
-    // {
-    //     return  $this->user->type ?? null === "facility"? "Self assessment": "Inspection";
-    // }
+    public function getInspectionTypeAttribute()
+    {
+        return  $this->user->type ?? null === "facility" ? "Self assessment" : "Inspection";
+    }
 
     public function user()
     {
