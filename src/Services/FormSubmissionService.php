@@ -96,6 +96,9 @@ class FormSubmissionService
             $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
         }
         $submission = FormSubmission::create($data);
+        if (function_exists('afterFormSubmissionCreate')) {
+            afterFormSubmissionCreate($submission);
+        }
         if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
 
         return response()->json(['data' => 'Submission Successfully created'], 200);
@@ -119,10 +122,14 @@ class FormSubmissionService
 
     public static function update($request)
     {
+        
         if (FormSubmission::doesntExist('_id', $request->id)) return response()->json(['data' => []], 400);
         FormSubmission::where('_id', $request->id)->update([
             "data" => $request->data
         ]);
+        if (function_exists('afterFormSubmissionUpdate')) {
+            afterFormSubmissionUpdate($request->id);
+        }
         return response()->json(['data' => 'Submission Successfully Updated'], 200);
     }
 
@@ -131,6 +138,10 @@ class FormSubmissionService
         $collection = FormSubmission::find($id);
 
         if ($collection) $collection->delete();
+
+        if (function_exists('afterFormSubmissionDelete')) {
+            afterFormSubmissionDelete($id);
+        }
         return response()->json(['data' => 'Submission Successfully Deleted'], 200);
     }
 
