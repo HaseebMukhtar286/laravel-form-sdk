@@ -27,12 +27,13 @@ class FormSubmissionService
         }
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
-            ->where('form_id', $request->id)
-            ->with("user:name,email,type");
+            ->where('form_id', $request->id);
+            // ->with("user:name,email,type");
 
         if (method_exists(User::class, 'region')) {
             $collection = $collection->with("user.region");
         }
+        $collection = $collection->with("user:name,email,type");
 
         $collection =  $collection->orderBy('created_at', 'desc');
         if ($request->search) {
@@ -70,7 +71,7 @@ class FormSubmissionService
             }
             return $item;
         });
-        
+
         return response()->json(['data' => $collection], 200);
     }
 
