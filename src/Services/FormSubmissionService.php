@@ -28,8 +28,13 @@ class FormSubmissionService
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id)
-            ->with("user:name,email,type")
-            ->orderBy('created_at', 'desc');
+            ->with("user:name,email,type");
+
+        if (method_exists(User::class, 'region')) {
+            $collection = $collection->with("user.region");
+        }
+
+        $collection =  $collection->orderBy('created_at', 'desc');
         if ($request->search) {
             $collection->where(function ($subQuery) use ($request, $columns) {
                 foreach ($columns as $column) {
@@ -54,6 +59,18 @@ class FormSubmissionService
             }
         }
         $collection = $collection->paginate(intVal($per_page));
+        $collection->getCollection()->transform(function ($item) {
+            if (isset($item['user']['region'])) {
+                foreach ($item['user']['region'] as $key => $value) {
+                    unset($value['user_ids']);
+                    unset($value['phcRegion']);
+                    unset($value['updated_at']);
+                    unset($value['created_at']);
+                }
+            }
+            return $item;
+        });
+        
         return response()->json(['data' => $collection], 200);
     }
 
@@ -122,7 +139,7 @@ class FormSubmissionService
 
     public static function update($request)
     {
-        
+
         if (FormSubmission::doesntExist('_id', $request->id)) return response()->json(['data' => []], 400);
         FormSubmission::where('_id', $request->id)->update([
             "data" => $request->data
