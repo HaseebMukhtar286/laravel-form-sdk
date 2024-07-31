@@ -28,7 +28,7 @@ class FormSubmissionService
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id);
-            // ->with("user:name,email,type");
+        // ->with("user:name,email,type");
 
         if (method_exists(User::class, 'region')) {
             $collection = $collection->with("user.region");
@@ -112,7 +112,14 @@ class FormSubmissionService
         ];
         if (auth()->user()->type != 'facility') {
             $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
+        } else {
+            $site_id = isset($request->data['site']['value']) ? $request->data['site']['value'] : '';
+            $getSubmissions =  FormSubmission::where('form_id', $request->id)->where('user_id', auth()->user()->_id)->where('data.site.value', $site_id)->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay())->get();
+            if (count($getSubmissions) > 0) {
+                return response()->json(['data' => "Submission already created for selected form and site within 3 month"], 404);
+            }
         }
+
         $submission = FormSubmission::create($data);
         if (function_exists('afterFormSubmissionCreate')) {
             afterFormSubmissionCreate($submission);
