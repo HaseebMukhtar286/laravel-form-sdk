@@ -16,7 +16,7 @@ class SchemaService
             'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
             'search' => isset($req['search']) ? $req['search'] : '',
         ]);
-        $str = '&form_status=' . isset($req['form_status']) ? $req['form_status'] : true;
+        $str = '&form_status=' . $req['form_status'];
         $str = $str . '&search=' . isset($req['search']) ? $req['search'] : "";
 
         $uri = '/formListingData?page=' . $req["page"] . $str;
