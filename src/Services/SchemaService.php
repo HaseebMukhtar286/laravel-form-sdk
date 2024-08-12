@@ -11,7 +11,7 @@ class SchemaService
     public static function listingBySecretKey($req)
     {
         // Manually set the query parameters
-        $queryString = ([
+        $queryString = http_build_query([
             'page' => isset($req['page']) ? $req['page'] : 1,
             'per_page' => isset($req['per_page']) ? $req['per_page'] : 10,
             'status' => isset($req['status']) ? $req['status'] : true,
@@ -21,9 +21,9 @@ class SchemaService
         ]);
 
         // Append the query string to the URI
-        $uri = '/formListingData';
+        $uri = '/formListingData?' . $queryString;
 
-        [$result] = ApiService::makeRequest('GET', $uri, $queryString);
+        [$result] = ApiService::makeRequest('GET', $uri);
         return $result;
     }
 
