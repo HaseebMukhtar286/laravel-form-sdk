@@ -37,6 +37,7 @@ class SchemaService
         $body = [
             "name" => $request->name,
             "icon" => $request->icon,
+            "is_template" => $request["is_template"] ?? false,
             "meta_data" => $request['meta_data'] ?? null,
         ];
 
