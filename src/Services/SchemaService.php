@@ -21,7 +21,7 @@ class SchemaService
         ]);
 
         // Append the query string to the URI
-        $uri = '/formListingData?' . $queryString;
+        $uri = '/formListingData';
 
         [$result] = ApiService::makeRequest('GET', $uri, $queryString);
         return $result;
