@@ -13,13 +13,15 @@ class SchemaService
         // Manually set the query parameters
         $queryString = http_build_query([
             'page' => isset($req['page']) ? $req['page'] : 1,
-            'per_page' => isset($req['per_page']) ? $req['per_page'] : 10,
             'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
             'search' => isset($req['search']) ? $req['search'] : '',
-            'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
-            'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
         ]);
+        $str = '&form_status=' . isset($req['form_status']) ? $req['form_status'] : true;
+        $str = $str . '&search=' . isset($req['search']) ? $req['search'] : "";
 
+        $uri = '/formListingData?page=' . $req["page"] . $str;
+        [$result] = ApiService::makeRequest('GET', $uri);
+        return $result;
         // Append the query string to the URI
         $uri = '/formListingData?' . $queryString;
 
