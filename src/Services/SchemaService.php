@@ -14,6 +14,7 @@ class SchemaService
             'page' => isset($req['page']) ? $req['page'] : 2,
             'per_page' => isset($req['per_page']) ? $req['per_page'] : 10,
             'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
+            'is_template' => isset($req['is_template']) ? $req['is_template'] : true,
             'search' => isset($req['search']) ? $req['search'] : '',
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
