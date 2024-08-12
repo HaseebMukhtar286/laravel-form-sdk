@@ -10,21 +10,24 @@ class SchemaService
 {
     public static function listingBySecretKey($req)
     {
-        // Initialize the query string with form_status
-        $queryString = 'form_status=' . $req['form_status'];
-        
-        // Append search to the query string if it's set
-        $queryString .= isset($req['search']) ? '&search=' . $req['search'] : '';
-    
-        // Append the page number to the query string
-        $queryString .= '&page=' . $req['page'];
-    
+        $params = [
+            'page' => isset($req['page']) ? $req['page'] : 2,
+            'per_page' => isset($req['per_page']) ? $req['per_page'] : 10,
+            'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
+            'search' => isset($req['search']) ? $req['search'] : '',
+            'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
+            'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
+        ];
+
+        $queryString = http_build_query($params);
+
         // Build the final URI with the query string
         $uri = '/formListingData?' . $queryString;
-    
+
+
         // Make the request to the API
-        [$result] = ApiService::makeRequest('GET', $uri);
-    
+        [$result] = ApiService::makeRequest('GET', $uri, $params);
+
         // Return the result
         return $result;
     }
