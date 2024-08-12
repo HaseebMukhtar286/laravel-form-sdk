@@ -10,7 +10,12 @@ class SchemaService
 {
     public static function listingBySecretKey($req)
     {
-        $uri = '/formListingData?page=' . $req["page"];
+        // Build the query string from the $req array
+        $queryString = http_build_query($req);
+
+        // Append the query string to the URI
+        $uri = '/formListingData?' . $queryString;
+
         [$result] = ApiService::makeRequest('GET', $uri);
         return $result;
     }
@@ -41,10 +46,10 @@ class SchemaService
         return $result;
     }
 
-    public static function showFormById(Request $request,$id)
+    public static function showFormById(Request $request, $id)
     {
         // $id = $request->id;
-        $uri = "/form/$id?isDev=".$request->isDev;
+        $uri = "/form/$id?isDev=" . $request->isDev;
 
         [$result] = ApiService::makeRequest('GET', $uri);
         return $result;
