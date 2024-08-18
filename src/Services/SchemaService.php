@@ -15,11 +15,12 @@ class SchemaService
             'per_page' => isset($req['per_page']) ? $req['per_page'] : 10,
             'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
             'is_template' => isset($req['is_template']) ? $req['is_template'] : true,
+            'is_scheduled' => isset($req['is_scheduled']) ? $req['is_scheduled'] : true,
             'search' => isset($req['search']) ? $req['search'] : '',
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
         ];
-
+        
         $queryString = http_build_query($params);
 
         // Build the final URI with the query string
