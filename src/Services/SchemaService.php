@@ -20,7 +20,7 @@ class SchemaService
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
         ];
-        
+
         $queryString = http_build_query($params);
 
         // Build the final URI with the query string
@@ -36,7 +36,7 @@ class SchemaService
     public static function createForm(Request $request)
     {
         $uri = '/form';
-        $body = array_merge($request->all(), [
+        $body =  [
             "name" => $request->name,
             "icon" => $request->icon,
             "is_template" => $request["is_template"] ?? false,
@@ -44,7 +44,7 @@ class SchemaService
             "start_date" => $request["start_date"] ?? null,
             "end_date" => $request["end_date"] ?? null,
             "meta_data" => $request['meta_data'] ?? null,
-        ]);
+        ];
 
         [$result] = ApiService::makeRequest('POST', $uri, $body);
         return $result;
