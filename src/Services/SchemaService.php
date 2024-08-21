@@ -36,15 +36,14 @@ class SchemaService
     public static function createForm(Request $request)
     {
         $uri = '/form';
-        $body = [
+        $body = array_merge($request->all(), [
             "name" => $request->name,
             "icon" => $request->icon,
             "is_template" => $request["is_template"] ?? false,
-            "is_scheduled" => $request["is_scheduled"] ?? false,
             "start_date" => $request["start_date"] ?? null,
             "end_date" => $request["end_date"] ?? null,
             "meta_data" => $request['meta_data'] ?? null,
-        ];
+        ]);
 
         [$result] = ApiService::makeRequest('POST', $uri, $body);
         return $result;
