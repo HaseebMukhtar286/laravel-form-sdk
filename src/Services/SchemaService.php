@@ -55,9 +55,13 @@ class SchemaService
         $uri = '/form/update-form';
         $body = [
             "name" => $request->name,
+            "campaign_title" => $request["campaign_title"] ?? "",
             "icon" => $request->icon,
+            "is_template" => $request["is_template"] ?? false,
+            "is_campaign" => $request->is_campaign ?? false,
+            "start_date" => $request["start_date"] ?? null,
+            "end_date" => $request["end_date"] ?? null,
             "meta_data" => $request['meta_data'] ?? null,
-            "id" => $request["id"] ?? null
         ];
 
         [$result] = ApiService::makeRequest('POST', $uri, $body);
