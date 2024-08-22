@@ -38,6 +38,7 @@ class SchemaService
         $uri = '/form';
         $body =  [
             "name" => $request->name,
+            "campaign_title" => $request["campaign_title"] ?? "",
             "icon" => $request->icon,
             "is_template" => $request["is_template"] ?? false,
             "is_campaign" => $request->is_campaign ?? false,
