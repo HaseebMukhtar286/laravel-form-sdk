@@ -62,6 +62,7 @@ class SchemaService
             "start_date" => $request["start_date"] ?? null,
             "end_date" => $request["end_date"] ?? null,
             "meta_data" => $request['meta_data'] ?? null,
+            "id" => $request["id"] ?? null
         ];
 
         [$result] = ApiService::makeRequest('POST', $uri, $body);
