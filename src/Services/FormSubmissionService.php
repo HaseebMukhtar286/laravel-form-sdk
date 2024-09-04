@@ -80,6 +80,10 @@ class FormSubmissionService
         if ($request->id) {
             $collection = FormSubmission::where('form_id', $request->id)->orderBy('created_at', 'dsc');
 
+            if (isset($reques->submissionId)) {
+                $collection  =  $collection->where("_id", $request->submissionId);
+            }
+
             $collection = $collection->get();
 
             $uri = "/form/" . $request->id;
@@ -121,7 +125,7 @@ class FormSubmissionService
         }
 
         $submission = FormSubmission::create($data);
-        if (function_exists('afterFormSubmissionCreate')) { 
+        if (function_exists('afterFormSubmissionCreate')) {
             afterFormSubmissionCreate($submission);
         }
         if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
