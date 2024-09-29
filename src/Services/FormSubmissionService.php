@@ -25,41 +25,51 @@ class FormSubmissionService
             });
             $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no'];
         }
+    
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id);
-        // ->with("user:name,email,type");
-
+    
+        // Apply user region relationship if it exists
         if (method_exists(User::class, 'region')) {
             $collection = $collection->with("user.region");
         }
+        
+        // Include user name, email, and type in the result set
         $collection = $collection->with("user:name,email,type");
-
-        $collection =  $collection->orderBy('created_at', 'desc');
+    
+        // Order by created_at in descending order
+        $collection = $collection->orderBy('created_at', 'desc');
+    
+        // Search logic for both form submission columns and user fields
         if ($request->search) {
-            $collection->where(function ($subQuery) use ($request, $columns) {
-                foreach ($columns as $column) {
-                    if ($columns != '*') {
-                        foreach ($columns as $column) {
-                            $subQuery->orWhere($column . ".label", 'LIKE', '%' . $request->search . '%');
+            $searchTerm = '%' . trim($request->search) . '%';
+    
+            $collection->where(function ($query) use ($searchTerm, $columns) {
+                // Search within the form data columns (only specific columns, not '*')
+                if ($columns != '*') {
+                    foreach ($columns as $column) {
+                        if (strpos($column, 'data.') === 0) {
+                            $query->orWhere($column . '.label', 'LIKE', $searchTerm)
+                            ->orWhere($column, 'LIKE', $searchTerm) ;
                         }
                     }
                 }
+    
+                // Search within user name and email fields
+                $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
+                      ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
             });
         }
-
-        if (isset($request->search)) {
-            $collection->where(function ($subQuery) use ($request) {
-                $subQuery->whereRelation('user', 'name', 'LIKE', '%' . trim($request->search) . '%')
-                    ->orWhereRelation('user', 'email', 'LIKE', '%' . trim($request->search) . '%');
-            });
+    
+        // Apply date range filters
+        if ($request->fromDate && $request->toDate) {
+            $fromDate = Carbon::parse($request->fromDate)->startOfDay();
+            $toDate = Carbon::parse($request->toDate)->endOfDay();
+            $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
         }
-        
-        if ($request->fromDate) {
-            $fromDate = Carbon::parse($request->fromDate);
-            $toDate = Carbon::parse($request->toDate);
-            $collection = $collection->whereBetween('created_at', [$fromDate->startOfDay(), $toDate->endOfDay()]);
-        }
+    
+        // Apply additional filtering based on user role
         if (!auth()->user()->isAdmin()) {
             if (auth()->user()->region_ids && (auth()->user()->isTopThree() || auth()->user()->isClusterManager())) {
                 $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
@@ -67,21 +77,23 @@ class FormSubmissionService
                 $collection = $collection->where("user_id", auth()->user()->_id);
             }
         }
+    
+        // Paginate the results
         $collection = $collection->paginate(intVal($per_page));
+    
+        // Clean up user region data before returning
         $collection->getCollection()->transform(function ($item) {
             if (isset($item['user']['region'])) {
                 foreach ($item['user']['region'] as $key => $value) {
-                    unset($value['user_ids']);
-                    unset($value['phcRegion']);
-                    unset($value['updated_at']);
-                    unset($value['created_at']);
+                    unset($value['user_ids'], $value['phcRegion'], $value['updated_at'], $value['created_at']);
                 }
             }
             return $item;
         });
-
+    
         return response()->json(['data' => $collection], 200);
     }
+    
 
     public static function all($request)
     {
