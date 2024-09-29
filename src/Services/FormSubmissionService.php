@@ -47,6 +47,14 @@ class FormSubmissionService
                 }
             });
         }
+
+        if (isset($request->search)) {
+            $collection->where(function ($subQuery) use ($request) {
+                $subQuery->whereRelation('user', 'name', 'LIKE', '%' . trim($request->search) . '%')
+                    ->orWhereRelation('user', 'email', 'LIKE', '%' . trim($request->search) . '%');
+            });
+        }
+        
         if ($request->fromDate) {
             $fromDate = Carbon::parse($request->fromDate);
             $toDate = Carbon::parse($request->toDate);
