@@ -69,14 +69,14 @@ class SchemaService
         return $result;
     }
 
-    public static function showFormById(Request $request, $id)
+    public static function showFormById(Request $request, $id, $check = true)
     {
         // $id = $request->id;
         $uri = "/form/$id?isDev=" . $request->isDev;
 
         [$result] = ApiService::makeRequest('GET', $uri);
 
-        if (function_exists('afterFormFetch')) {
+        if (function_exists('afterFormFetch') && $check) {
             $result = afterFormFetch($result);
         }
         
