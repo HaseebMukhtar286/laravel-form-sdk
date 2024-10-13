@@ -79,9 +79,22 @@ class SchemaService
         if (function_exists('afterFormFetch') && $check) {
             $result = afterFormFetch($result);
         }
-        
+
         return $result;
     }
+
+    public static function updateFormScheam(Request $request)
+    {
+        $uri = '/form/update-form-schema';
+        $body = [
+            "schema" =>  $request["schema"],
+            "id" => $request["id"] ?? null
+        ];
+
+        [$result] = ApiService::makeRequest('POST', $uri, $body);
+        return $result;
+    }
+
 
     public static function updateFormById(Request $request)
     {
