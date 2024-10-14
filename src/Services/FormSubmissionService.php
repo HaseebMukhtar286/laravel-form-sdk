@@ -25,50 +25,50 @@ class FormSubmissionService
             });
             $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no'];
         }
-    
+
         $per_page = $request->per_page ? $request->per_page : 20;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id);
-    
+
         // Apply user region relationship if it exists
         if (method_exists(User::class, 'region')) {
             $collection = $collection->with("user.region");
         }
-        
+
         // Include user name, email, and type in the result set
         $collection = $collection->with("user:name,email,type");
-    
+
         // Order by created_at in descending order
         $collection = $collection->orderBy('created_at', 'desc');
-    
+
         // Search logic for both form submission columns and user fields
         if ($request->search) {
             $searchTerm = '%' . trim($request->search) . '%';
-    
+
             $collection->where(function ($query) use ($searchTerm, $columns) {
                 // Search within the form data columns (only specific columns, not '*')
                 if ($columns != '*') {
                     foreach ($columns as $column) {
                         if (strpos($column, 'data.') === 0) {
                             $query->orWhere($column . '.label', 'LIKE', $searchTerm)
-                            ->orWhere($column, 'LIKE', $searchTerm) ;
+                                ->orWhere($column, 'LIKE', $searchTerm);
                         }
                     }
                 }
-    
+
                 // Search within user name and email fields
                 $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
-                      ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
+                    ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
             });
         }
-    
+
         // Apply date range filters
         if ($request->fromDate && $request->toDate) {
             $fromDate = Carbon::parse($request->fromDate)->startOfDay();
             $toDate = Carbon::parse($request->toDate)->endOfDay();
             $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
         }
-    
+
         // Apply additional filtering based on user role
         if (!auth()->user()->isAdmin()) {
             if (auth()->user()->region_ids && (auth()->user()->isTopThree() || auth()->user()->isClusterManager())) {
@@ -77,10 +77,10 @@ class FormSubmissionService
                 $collection = $collection->where("user_id", auth()->user()->_id);
             }
         }
-    
+
         // Paginate the results
         $collection = $collection->paginate(intVal($per_page));
-    
+
         // Clean up user region data before returning
         $collection->getCollection()->transform(function ($item) {
             if (isset($item['user']['region'])) {
@@ -90,10 +90,10 @@ class FormSubmissionService
             }
             return $item;
         });
-    
+
         return response()->json(['data' => $collection], 200);
     }
-    
+
 
     public static function all($request)
     {
@@ -138,17 +138,19 @@ class FormSubmissionService
         $data  = [
             "form_id" => $request->id,
             "data" => $request->data,
-            "user_id" => auth()->user()->_id,
+            "user_id" => auth()->user()->_id ?? $request->user_id ?? "663cc2f6f98b750b9b071394",
             "schema_version" => $request->schema_version ? $request->schema_version : '',
             "report_no" => (string) self::generateReportNo(),
         ];
-        if (auth()->user()->type != 'facility') {
-            $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
-        } else {
-            $site_id = isset($request->data['site']['value']) ? $request->data['site']['value'] : '';
-            $getSubmissions =  FormSubmission::where('form_id', $request->id)->where('user_id', auth()->user()->_id)->where('data.site.value', $site_id)->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay())->get();
-            if (count($getSubmissions) > 0) {
-                return response()->json(['data' => "You have already made a submission. You cannot submit again for the next three months."], 404);
+        if (auth()->user()) {
+            if (auth()->user()->type != 'facility') {
+                $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
+            } else {
+                $site_id = isset($request->data['site']['value']) ? $request->data['site']['value'] : '';
+                $getSubmissions =  FormSubmission::where('form_id', $request->id)->where('user_id', auth()->user()->_id)->where('data.site.value', $site_id)->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay())->get();
+                if (count($getSubmissions) > 0) {
+                    return response()->json(['data' => "You have already made a submission. You cannot submit again for the next three months."], 404);
+                }
             }
         }
 
