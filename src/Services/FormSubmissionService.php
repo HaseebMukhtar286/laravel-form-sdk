@@ -155,12 +155,13 @@ class FormSubmissionService
         }
 
         $submission = FormSubmission::create($data);
+
+        if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
+
         if (function_exists('afterFormSubmissionCreate')) {
             afterFormSubmissionCreate($submission);
         }
-        if (!$submission) return response()->json(['data' => "Submisson not created"], 402);
-
-        return response()->json(['data' => 'Submission Successfully created'], 200);
+        return response()->json(['data' => 'Submission Successfully created', $submission => $submission], 200);
     }
 
     //update the ReportNumber model

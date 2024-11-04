@@ -20,7 +20,8 @@ class FormSubmission extends Model
         "schema_version",
         "report_no",
         "status",
-        "is_data_compiled"
+        "is_data_compiled",
+        "support_ids"
     ];
 
     protected $appends = ['inspection_type'];
@@ -36,5 +37,10 @@ class FormSubmission extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function supportForms()
+    {
+        return $this->hasMany(FormSubmission::class, 'id', 'support_ids');
     }
 }
