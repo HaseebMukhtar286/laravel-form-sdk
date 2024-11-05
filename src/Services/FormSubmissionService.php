@@ -161,7 +161,7 @@ class FormSubmissionService
         if (function_exists('afterFormSubmissionCreate')) {
             afterFormSubmissionCreate($submission);
         }
-        return response()->json(['data' => 'Submission Successfully created', $submission => $submission], 200);
+        return response()->json(['data' => 'Submission Successfully created', "submission" => $submission], 200);
     }
 
     //update the ReportNumber model
