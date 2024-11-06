@@ -141,6 +141,7 @@ class FormSubmissionService
             "user_id" => auth()->user()->_id ?? $request->user_id ?? "663cc2f6f98b750b9b071394",
             "schema_version" => $request->schema_version ? $request->schema_version : '',
             "report_no" => (string) self::generateReportNo(),
+            "support_ids" => $request["support_ids"] ?? null
         ];
         if (auth()->user()) {
             if (auth()->user()->type != 'facility') {
