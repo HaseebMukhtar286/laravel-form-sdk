@@ -16,6 +16,7 @@ class SchemaService
             'form_status' => isset($req['form_status']) ? $req['form_status'] : true,
             'is_template' => isset($req['is_template']) ? $req['is_template'] : true,
             'is_scheduled' => isset($req['is_scheduled']) ? $req['is_scheduled'] : true,
+            'is_support' => isset($req['is_support']) ? $req['is_support'] : true,
             'search' => isset($req['search']) ? $req['search'] : '',
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
