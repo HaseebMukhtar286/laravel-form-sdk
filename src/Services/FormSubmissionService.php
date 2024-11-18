@@ -154,8 +154,13 @@ class FormSubmissionService
             if ($request->has('limit')) {
                 $collection->limit($request->limit);
             }
+            
+            if ($request->isFirst) {
+                $data = $collection->first()->data ?? null; // Retrieve the first record's 'data' attribute
+            } else {
+                $data = $collection->pluck('data');
+            }
 
-            $data = $collection->pluck('data');
 
             return response()->json(['data' => $data], 200);
         }
