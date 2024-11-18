@@ -123,6 +123,43 @@ class FormSubmissionService
         return response()->json(['data' => []], 400);
     }
 
+    public static function search($request)
+    {
+        $columns = $request->columns;
+        if ($request->id) {
+            $collection = FormSubmission::where('form_id', $request->id)->orderBy('created_at', 'dsc');
+
+            if (isset($reques->submissionId)) {
+                $collection  =  $collection->where("_id", $request->submissionId);
+            }
+
+            if ($request->search) {
+                $searchTerm = '%' . trim($request->search) . '%';
+
+                $collection->where(function ($query) use ($searchTerm, $columns) {
+                    if ($columns != '*' && is_array($columns)) {
+                        foreach ($columns as $column) {
+                            if (strpos($column, 'data.') === 0) {
+                                $query->orWhere($column . '.label', 'LIKE', $searchTerm)
+                                    ->orWhere($column, 'LIKE', $searchTerm);
+                            }
+                        }
+                    }
+                });
+            }
+
+            if ($request->has('limit')) {
+                $collection->limit($request->limit);
+            }
+
+            $data = $collection->pluck('data');
+
+            return response()->json(['data' => $data], 200);
+        }
+
+        return response()->json(['data' => []], 400);
+    }
+
     public static function find($id)
     {
         $collection = FormSubmission::where('_id', $id)->with('user')

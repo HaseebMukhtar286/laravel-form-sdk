@@ -23,6 +23,11 @@ class FormSubmissionController extends Controller
         return FormSubmissionService::all($request);
     }
 
+    public function search(Request $request)
+    {
+        return FormSubmissionService::search($request);
+    }
+
     public function show($id)
     {
         return FormSubmissionService::find($id);

@@ -51,6 +51,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
                 Route::put('update/{id}', [FormSubmissionController::class, 'update']);
                 Route::delete('delete/{id}', [FormSubmissionController::class, 'destroy']);
                 Route::get('/all', [FormSubmissionController::class, 'all']);
+                Route::get('/search', [FormSubmissionController::class, 'search']);
                 Route::post('/approved', [FormSubmissionController::class, 'approve']);
                 Route::post('/rejected', [FormSubmissionController::class, 'reject']);
                 // Route::get('moc-dashboard', [FormSubmissionController::class, 'dashboard']);
