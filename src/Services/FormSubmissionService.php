@@ -134,14 +134,18 @@ class FormSubmissionService
             }
 
             if ($request->search) {
-                $searchTerm = '%' . trim($request->search) . '%';
-
-                $collection->where(function ($query) use ($searchTerm, $columns) {
-                    if ($columns != '*' && is_array($columns)) {
-                        foreach ($columns as $column) {
-                            if (strpos($column, 'data.') === 0) {
-                                $query->orWhere($column . '.label', 'LIKE', $searchTerm)
-                                    ->orWhere($column, 'LIKE', $searchTerm);
+                $searchTerm = trim($request->search);
+            
+                $collection->where(function ($query) use ($searchTerm, $columns, $request) {
+                    foreach ($columns as $column) {
+                        if (strpos($column, 'data.') === 0) {
+                            if ($request->isExact) {
+                                $query->orWhere($column . '.label', '=', $searchTerm)
+                                    ->orWhere($column, '=', $searchTerm);
+                            } else {
+                                $searchTermLike = '%' . $searchTerm . '%';
+                                $query->orWhere($column . '.label', 'LIKE', $searchTermLike)
+                                    ->orWhere($column, 'LIKE', $searchTermLike);
                             }
                         }
                     }
