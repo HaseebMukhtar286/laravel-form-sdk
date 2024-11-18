@@ -172,6 +172,13 @@ class FormSubmissionService
     }
     public static function create($request)
     {
+        if (function_exists('beforeFormSubmissionCreate')) {
+            $res =   beforeFormSubmissionCreate($request);
+            if ($res) {
+                return $res;
+            }
+        }
+
         $data  = [
             "form_id" => $request->id,
             "data" => $request->data,
@@ -180,6 +187,7 @@ class FormSubmissionService
             "report_no" => (string) self::generateReportNo(),
             "support_ids" => $request["support_ids"] ?? null
         ];
+
         if (auth()->user()) {
             if (auth()->user()->type != 'facility') {
                 $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
@@ -220,6 +228,12 @@ class FormSubmissionService
 
     public static function update($request)
     {
+        if (function_exists('beforeFormSubmissionUpdate')) {
+            $res =   beforeFormSubmissionUpdate($request);
+            if ($res) {
+                return $res;
+            }
+        }
 
         if (FormSubmission::doesntExist('_id', $request->id)) return response()->json(['data' => []], 400);
         FormSubmission::where('_id', $request->id)->update([
