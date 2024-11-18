@@ -138,6 +138,7 @@ class FormSubmissionService
 
                 $collection->where(function ($query) use ($searchTerm, $columns, $request) {
                     foreach ($columns as $column) {
+                        $column = "data." . $column;
                         if ($request->isExact) {
                             $query->orWhere($column . '.label', '=', $searchTerm)
                                 ->orWhere($column, '=', $searchTerm);
