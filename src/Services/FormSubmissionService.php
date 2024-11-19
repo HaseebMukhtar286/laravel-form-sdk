@@ -133,7 +133,7 @@ class FormSubmissionService
                 $collection  =  $collection->where("_id", $request->submissionId);
             }
 
-            if ($request->search) {
+            if ($request->search || $request->isExact) {
                 $searchTerm = trim($request->search);
 
                 $collection->where(function ($query) use ($searchTerm, $columns, $request) {
