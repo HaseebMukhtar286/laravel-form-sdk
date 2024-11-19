@@ -25,7 +25,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
         Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
         Route::get('api/form/all-forms-list', [FormSchemaController::class, 'index']);
         Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
-        
+
         Route::prefix('api/formSchema')->group(function () {
             Route::post('create', [FormSchemaController::class, 'store']);
         });
@@ -38,6 +38,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
             Route::get('/submition-data', [ReportController::class, 'submitionData']);
         });
 
+        Route::get('FormSubmission/search', [FormSubmissionController::class, 'search']);
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
             // Route::get('/outlaw-form', [FormController::class, 'index']);
             // Route::post('/outlaw-form', [FormController::class, 'store']);
