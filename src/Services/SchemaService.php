@@ -120,6 +120,9 @@ class SchemaService
     {
         $uri = '/formListingAll';
         [$result] = ApiService::makeRequest('GET', $uri);
+        if (function_exists('afterAllFormsGet')) {
+            afterAllFormsGet($result);
+        }
         return $result;
     }
 
