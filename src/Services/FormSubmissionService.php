@@ -71,8 +71,10 @@ class FormSubmissionService
 
         // Apply additional filtering based on user role
         if (!auth()->user()->isAdmin()) {
-            if (auth()->user()->region_ids && (auth()->user()->isTopThree() || auth()->user()->isClusterManager())) {
+            if (auth()->user()->region_ids && (auth()->user()->isTopThree())) {
                 $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
+            } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo())) {
+                $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
             } else {
                 $collection = $collection->where("user_id", auth()->user()->_id);
             }
@@ -105,8 +107,10 @@ class FormSubmissionService
             }
 
             if (!auth()->user()->isAdmin()) {
-                if (auth()->user()->region_ids && (auth()->user()->isTopThree() || auth()->user()->isClusterManager())) {
+                if (auth()->user()->region_ids && (auth()->user()->isTopThree())) {
                     $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
+                } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo())) {
+                    $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
                 } else {
                     $collection = $collection->where("user_id", auth()->user()->_id);
                 }
@@ -154,7 +158,7 @@ class FormSubmissionService
             if ($request->has('limit')) {
                 $collection->limit($request->limit);
             }
-            
+
             if ($request->isFirst) {
                 $data = $collection->first()->data ?? null; // Retrieve the first record's 'data' attribute
             } else {
