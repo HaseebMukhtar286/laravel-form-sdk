@@ -261,6 +261,15 @@ class FormSubmissionService
     {
         $collection = FormSubmission::find($id);
 
+        if (isset($request->parent_id)) {
+            $parent = FormSubmission::find($request->parent_id);
+            if ($parent) {
+                $parent->support_ids = Arr::where($parent->support_ids, function ($value) use ($id) {
+                    return $value["_id"] != $id;
+                });
+                $parent->save();
+            }
+        }
         if ($collection) $collection->delete();
 
         if (function_exists('afterFormSubmissionDelete')) {
