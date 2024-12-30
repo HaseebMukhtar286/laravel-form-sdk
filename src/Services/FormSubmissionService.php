@@ -257,7 +257,7 @@ class FormSubmissionService
         return response()->json(['data' => 'Submission Successfully Updated'], 200);
     }
 
-    public static function destroy($id)
+    public static function destroy($id, $request)
     {
         $collection = FormSubmission::find($id);
 

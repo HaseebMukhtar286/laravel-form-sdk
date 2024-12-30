@@ -54,8 +54,8 @@ class FormSubmissionController extends Controller
     {
         return FormSubmissionService::update($request);
     }
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        return FormSubmissionService::destroy($id);
+        return FormSubmissionService::destroy($id, $request);
     }
 }
