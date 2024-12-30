@@ -249,7 +249,8 @@ class FormSubmissionService
 
         if (FormSubmission::doesntExist('_id', $request->id)) return response()->json(['data' => []], 400);
         FormSubmission::where('_id', $request->id)->update([
-            "data" => $request->data
+            "data" => $request->data,
+            "support_ids" => $request["support_ids"] ?? null
         ]);
         if (function_exists('afterFormSubmissionUpdate')) {
             afterFormSubmissionUpdate($request->id);
