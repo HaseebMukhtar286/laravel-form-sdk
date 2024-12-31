@@ -59,6 +59,8 @@ class FormSubmissionService
                 // Search within user name and email fields
                 $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
                     ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
+
+                $query->orWhere('report_no', 'LIKE', $searchTerm);
             });
         }
 
