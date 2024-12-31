@@ -274,7 +274,7 @@ class FormSubmissionService
         if ($collection) $collection->delete();
 
         if (function_exists('afterFormSubmissionDelete')) {
-            afterFormSubmissionDelete($id);
+            afterFormSubmissionDelete($id,  $request);
         }
         return response()->json(['data' => 'Submission Successfully Deleted'], 200);
     }
