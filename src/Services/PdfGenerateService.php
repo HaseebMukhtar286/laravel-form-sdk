@@ -14,18 +14,25 @@ class PdfGenerateService
     {
         if ($id) {
             $formSubmission = FormSubmission::with("user")->find($id);
-            if ($formSubmission) {
 
-                $data['formSubmission'] = $formSubmission;
-                $uri = "/form/" . $formSubmission['form_id'];
+            if (!$formSubmission) {
+                return response()->json(['message' => 'No Record Found'], 404);
+            }
 
+            $data = [];
+            $data['formSubmission'] = $formSubmission;
+            $uri = "/form/" . $formSubmission['form_id'];
+
+            try {
                 [$result] = ApiService::makeRequest('GET', $uri);
                 $data['schema'] = $result;
-                // $data['settings'] = Setting::where('key', 'TRANSLATION_ARABIC')->first();
-                return response()->json(['data' => $data], 200);
-            } else {
-                return response()->json(['data' => 'No Record Found'], 400);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Failed to fetch schema', 'error' => $e->getMessage()], 500);
             }
+
+            return response()->json(['data' => $data], 200);
         }
+
+        return response()->json(['message' => 'Invalid ID provided'], 400);
     }
 }
