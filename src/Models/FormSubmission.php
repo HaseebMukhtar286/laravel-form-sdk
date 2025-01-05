@@ -21,7 +21,12 @@ class FormSubmission extends Model
         "report_no",
         "status",
         "is_data_compiled",
-        "support_ids"
+        "support_ids",
+        "inspection_date"
+    ];
+
+    protected $casts = [
+        'inspection_date' => 'datetime',
     ];
 
     protected $appends = ['inspection_type'];
