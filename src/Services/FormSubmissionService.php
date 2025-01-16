@@ -102,7 +102,15 @@ class FormSubmissionService
     public static function all($request)
     {
         if ($request->id) {
-            $collection = FormSubmission::where('form_id', $request->id)->orderBy('created_at', 'dsc');
+            $collection = FormSubmission::where('form_id', $request->id)->with(
+                [
+                    "user:name,email,phone",
+                    'user.region' => function ($query) {
+                        $query->select('name', 'user_ids');
+                    }
+                ]
+
+            )->orderBy('created_at', 'dsc');
 
             if (isset($reques->submissionId)) {
                 $collection  =  $collection->where("_id", $request->submissionId);
