@@ -22,7 +22,6 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
     public function boot()
     {
         // $this->addDynamicMiddlewareToKernel();
-        Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
         Route::get('api/form/all-forms-list', [FormSchemaController::class, 'index']);
         Route::post('api/image-upload/{id}', [ImageUploadController::class, 'imageUpload']);
 
@@ -40,6 +39,7 @@ class LaravelFormSdkServiceProvider extends ServiceProvider
 
         Route::get('FormSubmission/search', [FormSubmissionController::class, 'search']);
         Route::prefix('/api')->middleware(['auth:api'])->group(function () {
+            Route::get('api/form/all-forms', [SchemaController::class, 'listingBySecretKeyAll']);
             // Route::get('/outlaw-form', [FormController::class, 'index']);
             // Route::post('/outlaw-form', [FormController::class, 'store']);
             // Route::get('/outlaw-form/{id}', [FormController::class, 'show']);
