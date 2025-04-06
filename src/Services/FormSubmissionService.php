@@ -72,14 +72,8 @@ class FormSubmissionService
         }
 
         // Apply additional filtering based on user role
-        if (!auth()->user()->isAdmin() && !auth()->user()->isSofAdmin()) {
-            if (auth()->user()->region_ids && (auth()->user()->isTopThree())) {
-                $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
-            } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo() || auth()->user()->isSofCluster() || auth()->user()->isSofHoldCo())) {
-                $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
-            } else {
-                $collection = $collection->where("user_id", auth()->user()->_id);
-            }
+        if (auth()->user()->type == "Patient") {
+            $collection = $collection->where("user_id", auth()->user()->_id);
         }
 
         // Paginate the results
