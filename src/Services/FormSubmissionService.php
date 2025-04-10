@@ -126,6 +126,45 @@ class FormSubmissionService
                 }
             }
 
+            $columns = '*';
+            if (isset($request->columns)) {
+                $requestedColumns = array_filter($request->columns, function ($column) {
+                    return strpos($column, 'data.') === 0;
+                });
+                $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids"];
+            }
+
+            if ($request->search) {
+                $searchTerm = '%' . trim($request->search) . '%';
+
+                $collection->where(function ($query) use ($searchTerm, $columns) {
+                    // Search within the form data columns (only specific columns, not '*')
+                    if ($columns != '*') {
+                        foreach ($columns as $column) {
+                            if (strpos($column, 'data.') === 0) {
+                                $query->orWhere($column . '.label', 'LIKE', $searchTerm)
+                                    ->orWhere($column, 'LIKE', $searchTerm);
+                            }
+                        }
+                    }
+
+                    // Search within user name and email fields
+                    $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
+                        ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
+
+                    $query->orWhere('report_no', 'LIKE', $searchTerm);
+                });
+            }
+
+            // Apply date range filters
+            if ($request->fromDate && $request->toDate) {
+                $fromDate = Carbon::parse($request->fromDate)->startOfDay();
+                $toDate = Carbon::parse($request->toDate)->endOfDay();
+                $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
+            }
+
+
+
             $collection = $collection->get();
 
             $uri = "/form/" . $request->id;
