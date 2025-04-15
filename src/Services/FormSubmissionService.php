@@ -70,6 +70,7 @@ class FormSubmissionService
             $toDate = Carbon::parse($request->toDate)->endOfDay();
             $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
         }
+        
 
         // Apply additional filtering based on user role
         if (!auth()->user()->isAdmin() && !auth()->user()->isSofAdmin() && !auth()->user()->isHoldCo()) {
