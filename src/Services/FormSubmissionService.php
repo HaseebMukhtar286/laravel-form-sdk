@@ -117,10 +117,10 @@ class FormSubmissionService
                 $collection  =  $collection->where("_id", $request->submissionId);
             }
 
-            if (!auth()->user()->isAdmin()) {
-                if (auth()->user()->region_ids && (auth()->user()->isTopThree())) {
+            if (!auth()->user()->isAdmin() && !auth()->user()->isHoldCo() && !auth()->user()->isTopThree() && !auth()->user()->isFacilityManager()) {
+                if (auth()->user()->region_ids) {
                     $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
-                } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo())) {
+                } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager())) {
                     $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
                 } else {
                     $collection = $collection->where("user_id", auth()->user()->_id);
