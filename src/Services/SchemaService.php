@@ -20,6 +20,7 @@ class SchemaService
             'search' => isset($req['search']) ? $req['search'] : '',
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
+            'submission_for' => isset($req['submission_for']) ? $req['submission_for'] : '',
         ];
 
         $queryString = http_build_query($params);
