@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace haseebmukhtar286\LaravelFormSdk\Models;
 
 
 use Jenssegers\Mongodb\Eloquent\Model;

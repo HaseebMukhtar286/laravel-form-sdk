@@ -2,18 +2,15 @@
 
 namespace haseebmukhtar286\LaravelFormSdk\Services;
 
-use App\Declarations\Declarations;
-use App\Models\Module;
-use App\Models\ObligationSites;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmissionHistory;
 use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
 use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations as PackageDeclarations;
+use haseebmukhtar286\LaravelFormSdk\Models\ObligationSites;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class FormSubmissionService
@@ -31,6 +28,7 @@ class FormSubmissionService
         }
 
         $per_page = $request->per_page ? $request->per_page : 20;
+        $page = $request->page;
         $collection = FormSubmission::select($columns)
             ->where('form_id', $request->id);
 
@@ -99,33 +97,19 @@ class FormSubmissionService
             return response()->json(['data' => $collection], 200);
         }
 
-        $newCollection = $clonsCollection->distinct('data.site.value')->paginate(intVal($per_page));
-
-        $uniqueSiteIds = [];
-        // // Clean up user region data before returning
-        $newCollection->getCollection()->transform(function ($item) use (&$uniqueSiteIds) {
-
-            if (isset($item->toArray()["0"])) {
-                $item["site_id"] = $item->toArray()["0"];
-                array_push($uniqueSiteIds, $item["site_id"]);
-            }
-
-            return $item;
+        $site_ids = $clonsCollection->pluck('data.site.value')->unique()->values();
+        $paginatedIds = $site_ids->forPage(intVal($page), intVal($per_page));
+        $sites = ObligationSites::whereIn('_id', $paginatedIds)->with("region:name")->get();
+        $sites = $paginatedIds->map(function ($id) use ($sites) {
+            return $sites->firstWhere('_id', $id);
         });
-
-
-        $sites = ObligationSites::whereIn("_id", $uniqueSiteIds)->with("region:name")->get();
 
         $paginated = new LengthAwarePaginator(
             $sites,
-            $newCollection->total(),
-            $newCollection->perPage(),
-            $newCollection->currentPage(),
-            [
-                'path' => $newCollection->path(),
-                'query' => request()->query(),
-                'pageName' => $newCollection->getPageName(),
-            ]
+            $site_ids->count(),
+            intVal($per_page),
+            intVal($page),
+            ['path' => request()->url(), 'query' => request()->query()]
         );
         return response()->json(['data' => $collection, "dataNew" => $paginated,], 200);
     }

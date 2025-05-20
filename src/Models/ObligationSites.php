@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace haseebmukhtar286\LaravelFormSdk\Models;
 
 
 use Jenssegers\Mongodb\Eloquent\Model;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
-
-use App\Traits\RoleTrait;
 
 class ObligationSites extends Model
 {
