@@ -4,6 +4,7 @@ namespace haseebmukhtar286\LaravelFormSdk\Services;
 
 use App\Declarations\Declarations;
 use App\Models\Module;
+use App\Models\ObligationSites;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -13,11 +14,14 @@ use haseebmukhtar286\LaravelFormSdk\Models\FormSubmission;
 use haseebmukhtar286\LaravelFormSdk\Models\FormSubmissionHistory;
 use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
 use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations as PackageDeclarations;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FormSubmissionService
 {
     public static function paginate($request)
     {
+
+        $architecture = $request->architecture ?? "standard";
         $columns = '*';
         if (isset($request->columns)) {
             $requestedColumns = array_filter($request->columns, function ($column) {
@@ -40,6 +44,10 @@ class FormSubmissionService
 
         // Order by created_at in descending order
         $collection = $collection->orderBy('created_at', 'desc');
+
+        if (isset($request->site_id) && !empty($request->site_id)) {
+            $collection = $collection->where('data.site.value', $request->site_id);
+        }
 
         // Search logic for both form submission columns and user fields
         if ($request->search) {
@@ -82,20 +90,44 @@ class FormSubmissionService
             }
         }
 
+        $clonsCollection =  $collection->clone();
+
         // Paginate the results
         $collection = $collection->paginate(intVal($per_page));
 
-        // Clean up user region data before returning
-        $collection->getCollection()->transform(function ($item) {
-            if (isset($item['user']['region'])) {
-                foreach ($item['user']['region'] as $key => $value) {
-                    unset($value['user_ids'], $value['phcRegion'], $value['updated_at'], $value['created_at']);
-                }
+        if ($architecture === "standard") {
+            return response()->json(['data' => $collection], 200);
+        }
+
+        $newCollection = $clonsCollection->distinct('data.site.value')->paginate(intVal($per_page));
+
+        $uniqueSiteIds = [];
+        // // Clean up user region data before returning
+        $newCollection->getCollection()->transform(function ($item) use (&$uniqueSiteIds) {
+
+            if (isset($item->toArray()["0"])) {
+                $item["site_id"] = $item->toArray()["0"];
+                array_push($uniqueSiteIds, $item["site_id"]);
             }
+
             return $item;
         });
 
-        return response()->json(['data' => $collection], 200);
+
+        $sites = ObligationSites::whereIn("_id", $uniqueSiteIds)->with("region:name")->get();
+
+        $paginated = new LengthAwarePaginator(
+            $sites,
+            $newCollection->total(),
+            $newCollection->perPage(),
+            $newCollection->currentPage(),
+            [
+                'path' => $newCollection->path(),
+                'query' => request()->query(),
+                'pageName' => $newCollection->getPageName(),
+            ]
+        );
+        return response()->json(['data' => $collection, "dataNew" => $paginated,], 200);
     }
 
 
