@@ -22,22 +22,23 @@ class FormSubmission extends Model
         "status",
         "is_data_compiled",
         "support_ids",
-        "inspection_date"
+        "inspection_date",
+        "inspection_type"
     ];
 
     protected $casts = [
         'inspection_date' => 'datetime',
     ];
 
-    protected $appends = ['inspection_type'];
+    // protected $appends = ['inspection_type'];
 
-    public function getInspectionTypeAttribute()
-    {
-        if (isset($this->user->type)) {
-            return $this->user->type === "facility" ? "Self assessment" : "Inspection";
-        }
-        // return  $this->user->type ?? null === "facility" ? "Self assessment" : "Inspection";
-    }
+    // public function getInspectionTypeAttribute()
+    // {
+    //     if (isset($this->user->type)) {
+    //         return $this->user->type === "facility" ? "Self assessment" : "Inspection";
+    //     }
+    //     // return  $this->user->type ?? null === "facility" ? "Self assessment" : "Inspection";
+    // }
 
     public function user()
     {
