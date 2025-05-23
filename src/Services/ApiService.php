@@ -19,7 +19,7 @@ class ApiService
         self::$secret = env('BUILDER_SECRET');
     }
 
-    public static function makeRequest($method, $uri, $data = null)
+    public static function makeRequest($method, $uri, $data = [])
     {
         self::initialize();
 
