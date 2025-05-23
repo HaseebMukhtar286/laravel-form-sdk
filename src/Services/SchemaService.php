@@ -77,7 +77,7 @@ class SchemaService
         // $id = $request->id;
         $uri = "/form/$id?isDev=" . $request->isDev;
 
-        [$result] = ApiService::makeRequest('GET', $uri);
+        [$result] = ApiService::makeRequest('GET', $uri, ["isDev" => $request->isDev]);
 
         if (function_exists('afterFormFetch') && $check) {
             $result = afterFormFetch($result);
