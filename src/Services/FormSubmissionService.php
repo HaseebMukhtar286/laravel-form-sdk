@@ -94,7 +94,14 @@ class FormSubmissionService
         $collection = $collection->paginate(intVal($per_page));
 
         if ($architecture === "standard") {
-            return response()->json(['data' => $collection], 200);
+            $firstSubmissionId = null;
+            $lastSubmissionId = null;
+            if (isset($request->site_id) && !empty($request->site_id)) {
+                $site_id            =   $request->site_id;
+                $firstSubmissionId  =   FormSubmission::where('data.site.value', $site_id)->where('form_id', $request->id)->orderBy('created_at', 'asc')->value('_id');
+                $lastSubmissionId   =   FormSubmission::where('data.site.value', $site_id)->where('form_id', $request->id)->orderBy('created_at', 'desc')->value('_id');
+            }
+            return response()->json(['data' => $collection, 'firstSubmissionId' => $firstSubmissionId, 'lastSubmissionId' => $lastSubmissionId], 200);
         }
 
         $site_ids = $clonsCollection->pluck('data.site.value')->unique()->values();
