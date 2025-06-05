@@ -276,11 +276,11 @@ class FormSubmissionService
             if (auth()->user()->type != 'facility') {
                 $data['status'] = PackageDeclarations::ALL_STATUS['APPROVED'];
             } else {
-                $site_id = isset($request->data['site']['value']) ? $request->data['site']['value'] : '';
-                $getSubmissions =  FormSubmission::where('form_id', $request->id)->where('user_id', auth()->user()->_id)->where('data.site.value', $site_id)->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay())->get();
-                if (count($getSubmissions) > 0) {
-                    return response()->json(['data' => "You have already made a submission. You cannot submit again for the next three months."], 404);
-                }
+                // $site_id = isset($request->data['site']['value']) ? $request->data['site']['value'] : '';
+                // $getSubmissions =  FormSubmission::where('form_id', $request->id)->where('user_id', auth()->user()->_id)->where('data.site.value', $site_id)->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay())->get();
+                // if (count($getSubmissions) > 0) {
+                //     return response()->json(['data' => "You have already made a submission. You cannot submit again for the next three months."], 404);
+                // }
             }
         }
 
