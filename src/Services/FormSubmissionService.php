@@ -3,6 +3,7 @@
 namespace haseebmukhtar286\LaravelFormSdk\Services;
 
 use App\Models\User;
+use App\Models\TaskSchedule;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Arr;
@@ -24,7 +25,7 @@ class FormSubmissionService
             $requestedColumns = array_filter($request->columns, function ($column) {
                 return strpos($column, 'data.') === 0;
             });
-            $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids","inspection_type"];
+            $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids", "inspection_type"];
         }
 
         $per_page = $request->per_page ? $request->per_page : 20;
@@ -125,6 +126,7 @@ class FormSubmissionService
     public static function all($request)
     {
         if ($request->id) {
+
             $collection = FormSubmission::where('form_id', $request->id)->with(
                 [
                     "user:name,email,phone",
@@ -135,14 +137,15 @@ class FormSubmissionService
 
             )->orderBy('created_at', 'dsc');
 
+
             if (isset($reques->submissionId)) {
                 $collection  =  $collection->where("_id", $request->submissionId);
             }
 
-            if (!auth()->user()->isAdmin()) {
-                if (auth()->user()->region_ids && (auth()->user()->isTopThree())) {
+            if (!auth()->user()->isAdmin() && !auth()->user()->isHoldCo() && !auth()->user()->isTopThree() && !auth()->user()->isFacilityManager()) {
+                if (auth()->user()->region_ids) {
                     $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
-                } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo())) {
+                } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager())) {
                     $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
                 } else {
                     $collection = $collection->where("user_id", auth()->user()->_id);
@@ -189,12 +192,51 @@ class FormSubmissionService
 
 
             $collection = $collection->get();
+            $submissionIds = $collection->pluck('_id')->toArray();
+            $formatted = [];
+
+            try {
+                $userWithReportNo = TaskSchedule::whereIn('submission_id', $submissionIds)
+                    ->select("submission", "submission_id")
+                    ->with(["submission:report_no", "tasks.user" => function ($query) {
+                        $query->select('name', 'email', 'phone', '_id', "type");
+                    }, "tasks" => function ($query) {
+                        $query->select('schedule_id', 'user_id');
+                    }])->where(function ($query) use ($request) {
+                        if ($request->has('is_completed')) {
+                            $query->where('is_completed', $request->is_completed);
+                        }
+                        if ($request->has('due_date')) {
+                            $query->whereDate('due_date', $request->due_date);
+                        }
+                    })->get();
+
+                foreach ($userWithReportNo as $schedule) {
+                    $reportNo = optional($schedule->submission)->report_no;
+
+                    foreach ($schedule->tasks as $task) {
+                        $user = $task->user;
+                        if ($user) {
+                            $formatted[] = [
+                                'report_no' => $reportNo,
+                                'name'      => $user->name,
+                                'email'     => $user->email,
+                                'phone'     => $user->phone,
+                                'type'      => $user->type,
+                            ];
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // Handle the exception if needed
+            }
+
 
             $uri = "/form/" . $request->id;
 
             [$result] = ApiService::makeRequest('GET', $uri);
 
-            return response()->json(['data' => $collection, 'schema' => $result], 200);
+            return response()->json(['data' => $collection, 'schema' => $result, "users" => $formatted], 200);
         }
         return response()->json(['data' => []], 400);
     }
