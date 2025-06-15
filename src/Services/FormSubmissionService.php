@@ -35,7 +35,9 @@ class FormSubmissionService
 
         // Apply user region relationship if it exists
         if (method_exists(User::class, 'region')) {
-            $collection = $collection->with("user.region");
+            $collection = $collection->with(["user.region" => function ($query) {
+                return $query->select('name', 'user_ids');
+            }]);
         }
 
         // Include user name, email, and type in the result set
