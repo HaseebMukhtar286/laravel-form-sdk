@@ -30,8 +30,15 @@ class FormSubmissionService
 
         $per_page = $request->per_page ? $request->per_page : 20;
         $page = $request->page;
-        $collection = FormSubmission::select($columns)
-            ->where('form_id', $request->id);
+        $collection = FormSubmission::select($columns);
+
+        if (isset($request->user_id) && !empty($request->user_id) && auth()->user()->isAdmin()) {
+            $collection = $collection->where('user_id', $request->user_id);
+        } else {
+            $collection = $collection->where('form_id', $request->id);
+        }
+
+
 
         // Apply user region relationship if it exists
         if (method_exists(User::class, 'region')) {
