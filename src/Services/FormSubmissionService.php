@@ -61,7 +61,7 @@ class FormSubmissionService
         if ($request->search) {
             $searchTerm = '%' . trim($request->search) . '%';
 
-            $collection->where(function ($query) use ($searchTerm, $columns) {
+            $collection->where(function ($query) use ($searchTerm, $columns, $request) {
                 // Search within the form data columns (only specific columns, not '*')
                 if ($columns != '*') {
                     foreach ($columns as $column) {
@@ -77,7 +77,7 @@ class FormSubmissionService
                     ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
 
                 $query->orWhere('report_no', 'LIKE', $searchTerm);
-                $query->orWhere('report_no', $searchTerm);
+                $query->orWhere('report_no', $request->search);
             });
         }
 
