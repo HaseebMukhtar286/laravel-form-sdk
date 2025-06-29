@@ -13,6 +13,7 @@ use haseebmukhtar286\LaravelFormSdk\Models\ReportNumber;
 use haseebmukhtar286\LaravelFormSdk\Declarations\Declarations as PackageDeclarations;
 use haseebmukhtar286\LaravelFormSdk\Models\ObligationSites;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 
 class FormSubmissionService
 {
@@ -59,9 +60,17 @@ class FormSubmissionService
 
         // Search logic for both form submission columns and user fields
         if ($request->search) {
+
+            $allForms = collect(Cache::get("AllDynamicForms"));
+
+            $allFormsIds = $allForms->filter(function ($form) use ($request) {
+                return stripos($form['name'] ?? '', trim($request->search)) !== false ||
+                    stripos($form['meta_data']['name_en'] ?? '', trim($request->search)) !== false;
+            })->pluck('_id');
+
             $searchTerm = '%' . trim($request->search) . '%';
 
-            $collection->where(function ($query) use ($searchTerm, $columns, $request) {
+            $collection->where(function ($query) use ($searchTerm, $columns, $request,  $allFormsIds) {
                 // Search within the form data columns (only specific columns, not '*')
                 if ($columns != '*') {
                     foreach ($columns as $column) {
@@ -78,6 +87,10 @@ class FormSubmissionService
 
                 $query->orWhere('report_no', 'LIKE', $searchTerm);
                 $query->orWhere('report_no', (int) trim($request->search));
+
+                if (count($allFormsIds) > 0) {
+                    $query->orWhereIn('form_id', $allFormsIds);
+                }
             });
         }
 
