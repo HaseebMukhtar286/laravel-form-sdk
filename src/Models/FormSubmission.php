@@ -49,4 +49,8 @@ class FormSubmission extends Model
     {
         return $this->hasMany(FormSubmission::class, 'id', 'support_ids');
     }
+    public function site()
+    {
+        return $this->belongsTo(ObligationSites::class, 'data.site.value');
+    }
 }
