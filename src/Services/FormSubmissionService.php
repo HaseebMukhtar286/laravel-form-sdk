@@ -85,6 +85,8 @@ class FormSubmissionService
                 $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
                     ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
 
+                $query->orWhereRelation('site', 'faciltyType', 'LIKE', $searchTerm);
+
                 $query->orWhere('report_no', 'LIKE', $searchTerm);
                 $query->orWhere('report_no', (int) trim($request->search));
 
