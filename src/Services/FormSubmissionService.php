@@ -34,7 +34,7 @@ class FormSubmissionService
         $collection = FormSubmission::select($columns);
 
         if (isset($request->user_id) && !empty($request->user_id) && auth()->user()->isAdmin()) {
-            $collection = $collection->where('user_id', $request->user_id)
+            $collection = $collection->where('user_id', $request->user_id);
         } else {
             $collection = $collection->where('form_id', $request->id);
         }
