@@ -34,7 +34,7 @@ class FormSubmissionService
         $collection = FormSubmission::select($columns);
 
         if (isset($request->user_id) && !empty($request->user_id) && auth()->user()->isAdmin()) {
-            $collection = $collection->where('user_id', $request->user_id)->with('site:facilityType');
+            $collection = $collection->where('user_id', $request->user_id)
         } else {
             $collection = $collection->where('form_id', $request->id);
         }
@@ -49,7 +49,7 @@ class FormSubmissionService
         }
 
         // Include user name, email, and type in the result set
-        $collection = $collection->with("user:name,email,type");
+        $collection = $collection->with("user:name,email,type")->with('site:facilityType');;
 
         // Order by created_at in descending order
         $collection = $collection->orderBy('created_at', 'desc');
