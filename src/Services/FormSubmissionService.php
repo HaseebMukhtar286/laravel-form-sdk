@@ -49,7 +49,7 @@ class FormSubmissionService
         }
 
         // Include user name, email, and type in the result set
-        $collection = $collection->with("user:name,email,type")->with('site:facilityType');;
+        $collection = $collection->with("user:name,email,type")->with('site:facilityType');
 
         // Order by created_at in descending order
         $collection = $collection->orderBy('created_at', 'desc');
@@ -85,7 +85,7 @@ class FormSubmissionService
                 $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
                     ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
 
-                $query->orWhereRelation('site', 'faciltyType', 'LIKE', $searchTerm);
+                $query->orWhereRelation('site', 'facilityType', 'LIKE', $searchTerm);
 
                 $query->orWhere('report_no', 'LIKE', $searchTerm);
                 $query->orWhere('report_no', (int) trim($request->search));
