@@ -214,7 +214,7 @@ class FormSubmissionService
                 $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
             } else {
                 // Default to last 3 months if no date range is provided
-                $fromDate = Carbon::now()->subMonths(3)->startOfDay();
+                $fromDate = Carbon::now()->subMonths(1)->startOfDay();
                 $toDate = Carbon::now()->endOfDay();
                 $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
             }
