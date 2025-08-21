@@ -36,7 +36,9 @@ class FormSubmissionService
         if (isset($request->user_id) && !empty($request->user_id) && auth()->user()->isAdmin()) {
             $collection = $collection->where('user_id', $request->user_id);
         } else {
-            $collection = $collection->where('form_id', $request->id);
+            if(isset( $request->id)){
+                $collection = $collection->where('form_id', $request->id);
+            }
         }
 
 
