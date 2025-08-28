@@ -26,7 +26,7 @@ class FormSubmissionService
             $requestedColumns = array_filter($request->columns, function ($column) {
                 return strpos($column, 'data.') === 0;
             });
-            $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids", "inspection_type", "form_id"];
+            $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids", "inspection_type", "form_id","arrest_form_submission_id","arrest_form_submitted_date"];
         }
 
         $per_page = $request->per_page ? $request->per_page : 20;
