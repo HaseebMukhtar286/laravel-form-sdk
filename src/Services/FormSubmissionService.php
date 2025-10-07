@@ -111,6 +111,8 @@ class FormSubmissionService
                 $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
             } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager() || auth()->user()->isHoldCo() || auth()->user()->isSofCluster() || auth()->user()->isSofHoldCo())) {
                 $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
+            } elseif (auth()->user()->obligation_sites_ids && auth()->user()->isFacilityManager()) {
+                $collection = $collection->whereIn('data.site.value', auth()->user()->obligation_sites_ids);
             } else {
                 $collection = $collection->where("user_id", auth()->user()->_id);
             }
