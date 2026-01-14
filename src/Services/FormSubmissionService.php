@@ -96,6 +96,14 @@ class FormSubmissionService
                     $query->orWhereIn('form_id', $allFormsIds);
                 }
             });
+
+            $search = strtolower($request->search);
+            if($search == "inspection"){
+                $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
+            }
+            if($search == "self assessment"){
+                $collection = $collection->whereRelation('user', 'type', "=", 'facility');
+            }
         }
 
         // Apply date range filters
