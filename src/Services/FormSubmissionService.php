@@ -97,7 +97,7 @@ class FormSubmissionService
                 }
             });
 
-            $search = strtolower($request->search);
+            $search = trim(strtolower($request->search));
             if($search == "inspection"){
                 $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
             }
