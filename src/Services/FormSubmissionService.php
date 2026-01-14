@@ -195,7 +195,13 @@ class FormSubmissionService
                 $columns = [...$requestedColumns, 'user_id', 'created_at', 'status', 'report_no', "support_ids"];
             }
 
-            if ($request->search) {
+            $search = trim(strtolower($request->search));
+
+            if($search == "inspection"){
+                $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
+            }else if($search == "self assessment"){
+                $collection = $collection->whereRelation('user', 'type', "=", 'facility');
+            }elseif ($request->search) {
                 $searchTerm = '%' . trim($request->search) . '%';
 
                 $collection->where(function ($query) use ($searchTerm, $columns) {
