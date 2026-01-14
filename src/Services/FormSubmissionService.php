@@ -60,16 +60,12 @@ class FormSubmissionService
             $collection = $collection->where('data.site.value', $request->site_id);
         }
         $search = trim(strtolower($request->search));
-        
+
         if($search == "inspection"){
             $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
-        }
-        if($search == "self assessment"){
+        }else if($search == "self assessment"){
             $collection = $collection->whereRelation('user', 'type', "=", 'facility');
-        }
-
-        // Search logic for both form submission columns and user fields
-        if ($request->search) {
+        }else if ($request->search) {
 
             $allForms = collect(Cache::get("AllDynamicForms"));
 
