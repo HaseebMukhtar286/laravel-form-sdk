@@ -59,6 +59,14 @@ class FormSubmissionService
         if (isset($request->site_id) && !empty($request->site_id)) {
             $collection = $collection->where('data.site.value', $request->site_id);
         }
+        $search = trim(strtolower($request->search));
+        
+        if($search == "inspection"){
+            $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
+        }
+        if($search == "self assessment"){
+            $collection = $collection->whereRelation('user', 'type', "=", 'facility');
+        }
 
         // Search logic for both form submission columns and user fields
         if ($request->search) {
@@ -97,13 +105,7 @@ class FormSubmissionService
                 }
             });
 
-            $search = trim(strtolower($request->search));
-            if($search == "inspection"){
-                $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
-            }
-            if($search == "self assessment"){
-                $collection = $collection->whereRelation('user', 'type', "=", 'facility');
-            }
+         
         }
 
         // Apply date range filters
