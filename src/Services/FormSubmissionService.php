@@ -177,7 +177,7 @@ class FormSubmissionService
                 $collection  =  $collection->where("_id", $request->submissionId);
             }
 
-            if (!auth()->user()->isAdmin() && !auth()->user()->isSofAdmin()) {
+            if (!auth()->user()->isAdmin() && !auth()->user()->isSofAdmin() && auth()->user()->type !== 'dmo') {
                 if (auth()->user()->region_ids) {
                     $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
                 } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager())) {
