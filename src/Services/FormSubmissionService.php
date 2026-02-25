@@ -165,7 +165,7 @@ class FormSubmissionService
 
             $collection = FormSubmission::where('form_id', $request->id)->with(
                 [
-                    "user:name,email,phone",
+                    "user:name,email,phone,type",
                     'user.region' => function ($query) {
                         $query->select('name', 'user_ids');
                     }
@@ -183,6 +183,9 @@ class FormSubmissionService
                     $collection = $collection->whereIn('data.region.value', auth()->user()->region_ids);
                 } elseif (auth()->user()->cluster_ids && (auth()->user()->isClusterManager())) {
                     $collection = $collection->whereIn('data.cluster.value', auth()->user()->cluster_ids);
+                } elseif (auth()->user()->obligation_sites_ids && auth()->user()->isFacilityManager()) {
+                    $collection = $collection->whereRelation('user', 'type', "=", 'facility');
+                    $collection = $collection->whereIn('data.site.value', auth()->user()->obligation_sites_ids);
                 } else {
                     $collection = $collection->where("user_id", auth()->user()->_id);
                 }
