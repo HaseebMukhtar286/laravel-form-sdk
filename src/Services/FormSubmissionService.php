@@ -258,7 +258,7 @@ class FormSubmissionService
                 $toDate = Carbon::parse($request->toDate)->endOfDay();
                 $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
             } else {
-                if(isset($allFilterValues)){
+                if(!isset($allFilterValues)){
                     // Default to last 1 months if no date range is provided
                     $fromDate = Carbon::now()->subMonths(1)->startOfDay();
                     $toDate = Carbon::now()->endOfDay();
