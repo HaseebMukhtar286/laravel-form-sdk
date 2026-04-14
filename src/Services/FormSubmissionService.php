@@ -211,7 +211,7 @@ class FormSubmissionService
                 $collection = $collection->whereRelation('user', 'type', "=", 'facility');
             }elseif ($search) {
                 $searchTerm = '%' . trim($search ) . '%';
-                $collection->where(function ($query) use ($searchTerm, $columns) {
+                $collection->where(function ($query) use ($searchTerm, $columns, $request,  $allFormsIds) {
                     // Search within the form data columns (only specific columns, not '*')
                     if ($columns != '*') {
                         foreach ($columns as $column) {
@@ -225,9 +225,13 @@ class FormSubmissionService
                     // Search within user name and email fields
                     $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
                         ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
-
+    
+                    $query->orWhereRelation('site', 'facilityType', 'LIKE', $searchTerm);
+    
                     $query->orWhere('report_no', 'LIKE', $searchTerm);
+                    $query->orWhere('report_no', (int) trim($request->search));
                 });
+
             }
 
             // Apply date range filters
