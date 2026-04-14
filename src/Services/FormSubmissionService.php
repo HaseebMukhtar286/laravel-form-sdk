@@ -209,9 +209,8 @@ class FormSubmissionService
                 $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
             }else if($search == "self assessment"){
                 $collection = $collection->whereRelation('user', 'type', "=", 'facility');
-            }elseif ($request->search) {
-                $searchTerm = '%' . trim($request->search) . '%';
-
+            }elseif ($search) {
+                $searchTerm = '%' . trim($search ) . '%';
                 $collection->where(function ($query) use ($searchTerm, $columns) {
                     // Search within the form data columns (only specific columns, not '*')
                     if ($columns != '*') {
