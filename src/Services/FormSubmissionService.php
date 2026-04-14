@@ -203,15 +203,16 @@ class FormSubmissionService
 
             $allFilterValues = Arr::first(array_filter(array_map('trim', Arr::wrap($request->input('all', [])))));
 
-            $search = $allFilterValues ?? $search;
+            $allFilterValues = $allFilterValues ?? $search;
             
-            if($search == "inspection"){
+            if($allFilterValues == "inspection"){
                 $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
-            }else if($search == "self assessment"){
+            }else if($allFilterValues == "self assessment"){
                 $collection = $collection->whereRelation('user', 'type', "=", 'facility');
-            }elseif ($search) {
-                $searchTerm = '%' . trim($search ) . '%';
-                $collection->where(function ($query) use ($searchTerm, $columns, $request) {
+            }elseif ($allFilterValues) {
+                $searchTerm = '%' . trim($allFilterValues ) . '%';
+
+                $collection->where(function ($query) use ($searchTerm, $columns) {
                     // Search within the form data columns (only specific columns, not '*')
                     if ($columns != '*') {
                         foreach ($columns as $column) {
@@ -225,13 +226,30 @@ class FormSubmissionService
                     // Search within user name and email fields
                     $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
                         ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
+
+                    $query->orWhere('report_no', 'LIKE', $searchTerm);
+                });
+
+                $collection->where(function ($query) use ($searchTerm, $columns, $allFilterValues) {
+                    // Search within the form data columns (only specific columns, not '*')
+                    if ($columns != '*') {
+                        foreach ($columns as $column) {
+                            if (strpos($column, 'data.') === 0) {
+                                $query->orWhere($column . '.label', 'LIKE', $searchTerm)
+                                    ->orWhere($column, 'LIKE', $searchTerm);
+                            }
+                        }
+                    }
+    
+                    // Search within user name and email fields
+                    $query->orWhereRelation('user', 'name', 'LIKE', $searchTerm)
+                        ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
     
                     $query->orWhereRelation('site', 'facilityType', 'LIKE', $searchTerm);
     
                     $query->orWhere('report_no', 'LIKE', $searchTerm);
-                    $query->orWhere('report_no', (int) trim($request->search));
+                    $query->orWhere('report_no', (int) trim($allFilterValues));
                 });
-
             }
 
             // Apply date range filters
@@ -240,13 +258,13 @@ class FormSubmissionService
                 $toDate = Carbon::parse($request->toDate)->endOfDay();
                 $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
             } else {
-                // Default to last 3 months if no date range is provided
-                $fromDate = Carbon::now()->subMonths(1)->startOfDay();
-                $toDate = Carbon::now()->endOfDay();
-                $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
+                if(isset($allFilterValues)){
+                    // Default to last 1 months if no date range is provided
+                    $fromDate = Carbon::now()->subMonths(1)->startOfDay();
+                    $toDate = Carbon::now()->endOfDay();
+                    $collection = $collection->whereBetween('created_at', [$fromDate, $toDate]);
+                }
             }
-
-
 
             $collection = $collection->get();
             $submissionIds = $collection->pluck('_id')->toArray();
