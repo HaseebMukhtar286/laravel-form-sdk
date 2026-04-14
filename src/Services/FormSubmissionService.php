@@ -76,7 +76,7 @@ class FormSubmissionService
 
             $searchTerm = '%' . trim($request->search) . '%';
 
-            $collection->where(function ($query) use ($searchTerm, $columns, $request) {
+            $collection->where(function ($query) use ($searchTerm, $columns, $request,  $allFormsIds) {
                 // Search within the form data columns (only specific columns, not '*')
                 if ($columns != '*') {
                     foreach ($columns as $column) {
@@ -211,7 +211,7 @@ class FormSubmissionService
                 $collection = $collection->whereRelation('user', 'type', "=", 'facility');
             }elseif ($search) {
                 $searchTerm = '%' . trim($search ) . '%';
-                $collection->where(function ($query) use ($searchTerm, $columns, $request,  $allFormsIds) {
+                $collection->where(function ($query) use ($searchTerm, $columns, $request) {
                     // Search within the form data columns (only specific columns, not '*')
                     if ($columns != '*') {
                         foreach ($columns as $column) {
