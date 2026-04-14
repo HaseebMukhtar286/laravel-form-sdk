@@ -201,6 +201,10 @@ class FormSubmissionService
 
             $search = trim(strtolower($request->search));
 
+            $allFilterValues = Arr::first(array_filter(array_map('trim', Arr::wrap($request->input('all', [])))));
+
+            $search = $allFilterValues ?? $search;
+            
             if($search == "inspection"){
                 $collection = $collection->whereRelation('user', 'type', "!=", 'facility');
             }else if($search == "self assessment"){
@@ -224,28 +228,6 @@ class FormSubmissionService
                         ->orWhereRelation('user', 'email', 'LIKE', $searchTerm);
 
                     $query->orWhere('report_no', 'LIKE', $searchTerm);
-                });
-            }
-
-            $allFilterValues = array_values(array_filter(array_map('trim', Arr::wrap($request->input('all', [])))));
-            if ($allFilterValues !== []) {
-                $collection->where(function ($query) use ($allFilterValues, $columns) {
-                    foreach ($allFilterValues as $item) {
-                        $term = '%' . $item . '%';
-                        $query->orWhere(function ($sub) use ($term, $columns) {
-                            if ($columns != '*') {
-                                foreach ($columns as $column) {
-                                    if (strpos($column, 'data.') === 0) {
-                                        $sub->orWhere($column . '.label', 'LIKE', $term)
-                                            ->orWhere($column, 'LIKE', $term);
-                                    }
-                                }
-                            } else {
-                                $sub->orWhere('data.site.label', 'LIKE', $term)
-                                    ->orWhere('data.site', 'LIKE', $term);
-                            }
-                        });
-                    }
                 });
             }
 
