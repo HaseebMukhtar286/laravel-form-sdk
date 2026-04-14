@@ -227,6 +227,28 @@ class FormSubmissionService
                 });
             }
 
+            $allFilterValues = array_values(array_filter(array_map('trim', Arr::wrap($request->input('all', [])))));
+            if ($allFilterValues !== []) {
+                $collection->where(function ($query) use ($allFilterValues, $columns) {
+                    foreach ($allFilterValues as $item) {
+                        $term = '%' . $item . '%';
+                        $query->orWhere(function ($sub) use ($term, $columns) {
+                            if ($columns != '*') {
+                                foreach ($columns as $column) {
+                                    if (strpos($column, 'data.') === 0) {
+                                        $sub->orWhere($column . '.label', 'LIKE', $term)
+                                            ->orWhere($column, 'LIKE', $term);
+                                    }
+                                }
+                            } else {
+                                $sub->orWhere('data.site.label', 'LIKE', $term)
+                                    ->orWhere('data.site', 'LIKE', $term);
+                            }
+                        });
+                    }
+                });
+            }
+
             // Apply date range filters
             if ($request->fromDate && $request->toDate) {
                 $fromDate = Carbon::parse($request->fromDate)->startOfDay();
