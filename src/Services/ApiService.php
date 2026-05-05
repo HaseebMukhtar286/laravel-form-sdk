@@ -19,17 +19,27 @@ class ApiService
         self::$secret = env('BUILDER_SECRET');
     }
 
-    public static function makeRequest($method, $uri, $data = [])
+    public static function makeRequest($method, $uri, $data = [], $queryParams = [])
     {
         self::initialize();
 
-        $data['secret'] = self::$secret;
-        $client = new \GuzzleHttp\Client([
-            'headers' => ['Content-Type' => 'application/json'],
-            'json' => $data,
-        ]);
-
         $url = self::$baseUrl . $uri;
+
+        $options = [
+            'headers' => ['Content-Type' => 'application/json'],
+        ];
+
+        if (strtoupper($method) === 'GET') {
+            // Merge $data and $queryParams for GET requests (backward compatibility)
+            $allQueryParams = array_merge($data, $queryParams);
+            $allQueryParams['secret'] = self::$secret;
+            $url = $url . '?' . http_build_query($allQueryParams);
+        } else {
+            $data['secret'] = self::$secret;
+            $options['json'] = $data;
+        }
+
+        $client = new \GuzzleHttp\Client($options);
 
         try {
             $response = $client->request($method, $url);
@@ -38,14 +48,10 @@ class ApiService
                 self::jsonFormat($response),
                 $response
             ];
-            // return response()->json(json_decode($response->getBody()->getContents(), true), $response->getStatusCode());
         } catch (RequestException $e) {
-
-            throw  $e;
-            // return response()->json(['error' => 'Request failed: ' . $e->getMessage()], 500);
+            throw $e;
         } catch (\Exception $e) {
-            throw  $e;
-            // return response()->json(['error' => 'An unexpected error occurred'], 500);
+            throw $e;
         }
     }
 

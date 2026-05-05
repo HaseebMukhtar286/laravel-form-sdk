@@ -120,7 +120,7 @@ class SchemaService
     public static function listingBySecretKeyAll(Request $request)
     {
         $uri = '/formListingAll';
-        [$result] = ApiService::makeRequest('GET', $uri);
+        [$result] = ApiService::makeRequest('GET', $uri, [], $request->query());
         if (function_exists('afterAllFormsGet')) {
             afterAllFormsGet($request, $result);
         }
