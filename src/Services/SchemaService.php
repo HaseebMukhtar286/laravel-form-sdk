@@ -23,11 +23,8 @@ class SchemaService
             'submission_for' => isset($req['submission_for']) ? $req['submission_for'] : '',
         ];
 
-        $queryString = http_build_query($params);
-
-        // Build the final URI with the query string
-        $uri = '/formListingData?' . $queryString;
-
+        // Build the final URI
+        $uri = '/formListingData';
 
         // Make the request to the API
         [$result] = ApiService::makeRequest('GET', $uri, $params);
@@ -76,7 +73,7 @@ class SchemaService
     public static function showFormById(Request $request, $id, $check = true)
     {
         // $id = $request->id;
-        $uri = "/form/$id?isDev=" . $request->isDev;
+        $uri = "/form/$id";
 
         [$result] = ApiService::makeRequest('GET', $uri, ["isDev" => $request->isDev]);
 

@@ -23,15 +23,23 @@ class ApiService
     {
         self::initialize();
 
-        $url = self::$baseUrl . $uri;
+        // Parse URI to handle existing query params
+        $parsedUri = parse_url($uri);
+        $path = $parsedUri['path'] ?? $uri;
+        $existingQuery = [];
+        if (isset($parsedUri['query'])) {
+            parse_str($parsedUri['query'], $existingQuery);
+        }
+
+        $url = self::$baseUrl . $path;
 
         $options = [
             'headers' => ['Content-Type' => 'application/json'],
         ];
 
         if (strtoupper($method) === 'GET') {
-            // Merge $data and $queryParams for GET requests (backward compatibility)
-            $allQueryParams = array_merge($data, $queryParams);
+            // Merge existing query params, $data, and $queryParams for GET requests
+            $allQueryParams = array_merge($existingQuery, $data, $queryParams);
             $allQueryParams['secret'] = self::$secret;
             $url = $url . '?' . http_build_query($allQueryParams);
         } else {
