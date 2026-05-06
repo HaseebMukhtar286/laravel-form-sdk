@@ -21,6 +21,7 @@ class SchemaService
             'fromDate' => isset($req['fromDate']) ? $req['fromDate'] : '',
             'toDate' => isset($req['toDate']) ? $req['toDate'] : '',
             'submission_for' => isset($req['submission_for']) ? $req['submission_for'] : '',
+            'organization_id' => isset($req['organization_id']) ? $req['organization_id'] : '',
         ];
 
         // Build the final URI
